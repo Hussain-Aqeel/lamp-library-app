@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="#" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://bootswatch.com/4/sandstone/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/stylesheet/stylesheet.css">
+    <title>Library App - book's title</title>
+</head>
+<body>
+
+  <?php include('nav.php') ?>
+
+  <div class="container" 
+      style=" 
+      height: 100vh;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); grid-gap: 2em;">
+      
+
+      <img src="./assets/img/laws-of-power.jpg" alt="laws of power" width="500" height="600" style="margin-top: 10em;">
+
+      <div id="book-info" style="background-color: #fff; height: 70%; margin-top: 10em; padding: 1em; overflow: none;">
+        <h3>48 rules of power</h3>
+          <p class="text-muted">By Robert Greene</p>
+        <!-- <p class="text-muted">Psychology</p> -->
+        <hr>
+        <!-- <p class="lead"><span style="font-weight: bold;">Author: </span>Robert Greene </p> -->
+        <p class="lead"><span style="font-weight: bold;">Description: </span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore minima repellendus cum cumque animi ab ratione sint earum quisquam odio!</p>
+        <span class="badge bg-secondary text-white p-2">Psychology</span>
+        <p class="mt-5">Read about the author</p>
+        <a class="text-primary mt-0" target="_blank" href="https://en.wikipedia.org/wiki/Robert_Greene_(American_author)">Robert Greene</a>
+
+      </div>
+
+  </div>
+    
+  <div class="container" style="height: 100vh;">
+    <hr>
+    <h2>Comments</h2>
+    <div style="display: flex; flex-direction: column; justify-content: center; padding-bottom: 10em; padding-top: 1em; background-color: #f4f4f4; padding-left: 2em;">
+      <div style="background-color: #fff; width: 90%; margin-top: 1em; padding: 1em;">
+        <strong>User184687</strong>
+        <p class="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque omnis iste ex dolorum? Vel obcaecati voluptatibus quibusdam, error impedit quasi reprehenderit repellendus asperiores accusantium in?</p>
+        
+      </div>
+      <div style="background-color: #fff; width: 90%; margin-top: 1em; padding: 1em;">
+        <strong>User616875</strong>
+        <p class="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque omnis iste ex dolorum? Vel obcaecati voluptatibus quibusdam, error impedit quasi reprehenderit repellendus asperiores accusantium in?</p>
+      </div>
+
+      <h5 class="mt-5">Add comment</h5>
+      <form style="width: 89%;">
+        <textarea style="width: 100%; height: 8em;" name="" id=""></textarea>
+        <div class="my-4 d-flex justify-content-end">
+          <button type="button" class="btn btn-lg btn-danger">Clear</button>
+          <button type="button" class="ml-3 btn btn-lg btn-primary">Submit</button>
+        </div>
+        
+      </form>
+    </div>
+    
+    
+  </div>
+  
+
+  <?php require_once('footer.php') ?>
+
+  <!-- bootstrap javascript files-->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
+  <!-- this jquery for the hamburger menu -->
+  <script>
+      $('.dropdown-toggle').dropdown();
+      $('#users-list a').on('click', function (e) {
+          e.preventDefault()
+          $(this).tab('show')
+      });
+  </script>
+</body>
+</html>
