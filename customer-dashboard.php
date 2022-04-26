@@ -16,7 +16,9 @@
 
 
 <div class="container mb-5" style="min-height: 79vh;">
-  <h1 class="my-4 d-flex justify-content-between">Member's name<span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">MEMBER</span></h1>
+  <h1 class="my-4 d-flex justify-content-between">{{Customer's name}}
+    <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">{{ Role }}</span>
+  </h1>
   <hr>
 
   <h1 class="mb-4 ml-4">Borrows</h1>  
@@ -27,7 +29,6 @@
             <th scope="col">Reserve_Date</th>
             <th scope="col">ISBN_Code</th>
             <th scope="col">Status</th>
-            <th scope="col"> </th>
           </tr>
         </thead>
         <tbody class="items">
@@ -35,15 +36,11 @@
             <td class="title row-data">5/2/2022</td>
             <td class="lang row-data">11556626849</td>
             <td class="subject row-data">active</td>
-            <td><button type="button" 
-              class="btn btn-danger">cancel</button></td>
           </tr>
           <tr class="table-light" id="<%= counter++ %> ">
             <td class="title row-data">5/2/2022</td>
             <td class="lang row-data">11556626849</td>
             <td class="subject row-data">active</td>
-            <td><button type="button" 
-              class="btn btn-danger">cancel</button></td>
           </tr>
         </tbody>
       </table>

@@ -1,33 +1,32 @@
 <?php
-// require_once "connection.php";
-// session_start();
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     // username and password sent from form
+// require_once("auth.php");
 
+include "connection.php";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-//     $myusername = mysqli_real_escape_string($link, $_POST['username']);
-//     $mypassword = mysqli_real_escape_string($link, $_POST['password']);
+  session_start();
+  // /** @var mysqli $link */
+  $email = mysqli_real_escape_string($link, $_POST['email']);
+  $password = mysqli_real_escape_string($link, $_POST['password']);
 
-//     $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
-//     $result = mysqli_query($db, $sql);
-//     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-//     $active = $row['active'];
+  if ($email != "" && $password != "") {
 
-//     $count = mysqli_num_rows($result);
+      $sql_query = "select * from User where email='" . $email . "' and password='" . $password . "'";
+      $result = mysqli_query($link, $sql_query);
+      $row = mysqli_fetch_array($result);
 
-//     // If result matched $myusername and $mypassword, table row must be 1 row
+      $count = isset($row) ? count($row) : null;
 
-//     if ($count == 1) {
-//         session_register("myusername");
-//         $_SESSION['login_user'] = $myusername;
-
-//         header("location: welcome.php");
-//     } else {
-//         $error = "Your Login Name or Password is invalid";
-//     }
-// }
+      if (isset($count) && $count > 0 ) {
+          $_SESSION["email${email}"] = $email;
+          header('Location: homepage.php');
+      } else {
+          $_SESSION['error_login'] = "Invalid username and password";
+      }
+  }
+}
 
 ?>
 
@@ -55,15 +54,19 @@
         <div class="card-body">
           <h1 class="text-center mb-3"><i class="fa fa-sign-in"></i> Login</h1>          
           <!-- TODO: add flush messages -->
-
+            <?php
+            if($_SESSION['error_login'])
+                echo '<div class="alert alert-danger" role="alert">' .$_SESSION['error_login']. '</div>';
+            ?>
           <div class="tab-content mt-3">
             <div class="tab-pane active" id="member" role="tabpanel">
-              <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+              <form action="/login.php" method="POST">
                 <div class="form-group">
-                  <label for="member-email">email</label>
+                  <label for="email">email</label>
                   <input
                     id="email"
                     name="email"
+                    type="email"
                     class="form-control"
                     placeholder="Enter Your email"
                   />
@@ -74,7 +77,7 @@
                     type="password"
                     id="password"
                     name="password"
-                    class="form-control""
+                    class="form-control"
                   />
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Login</button>

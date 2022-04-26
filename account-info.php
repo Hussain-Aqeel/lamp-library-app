@@ -27,15 +27,10 @@
                    name="name" 
                    type="text" 
                    class="form-control" 
-                   value="<%= name %>" 
+                   value="{{user's name}}" 
                    disabled
                    style="padding: 1.5em 0 1.5em 1em;"
                    >
-            <div id="edit-name" class="input-group-append">
-              <a class="input-group-text" onclick="editName()">
-                <i id="name-icon" class="fa fa-edit"></i>
-              </a>
-            </div>
           </div>
 
           <br>
@@ -50,12 +45,6 @@
                   disabled
                   style="padding: 1.5em 0 1.5em 1em;"
                   >
-
-            <div id="edit-email" class="input-group-append">
-              <a class="input-group-text" onclick="editEmail()">
-                <i id="email-icon" class="fa fa-edit"></i>
-              </a>
-            </div>
           </div>
 
           <br>
@@ -66,15 +55,23 @@
                   name="password" 
                   type="text" 
                   class="form-control" 
-                  value="******" 
+                  value="*********" 
                   disabled
                   style="padding: 1.5em 0 1.5em 1em;"
                   >
-
             <div id="edit-password" class="input-group-append">
               <a class="input-group-text" onclick="editPassword()">
                 <i id="password-icon" class="fa fa-edit"></i>
               </a>
+            </div>
+            <div id="passwordConfirmation" class="input-group input-group-lg mt-2" style="display: none;">
+            <label style="font-size: 2em;" for="password">Confirm password:</label>
+              <input id="password2" 
+              name="password2" 
+              type="text" 
+              class="form-control" 
+              style="display: block; width: 100%;"
+              >
             </div>
           </div>
       </form>
@@ -98,43 +95,19 @@
   </script>
 
   <script>
-    editName = async () => {
-      const btn = document.createElement("button");
-      btn.type = 'submit';
-      btn.classList = 'btn btn-dark rounded ml-3';
-      btn.innerText = 'Edit';
-      document.getElementById('nameArea').appendChild(btn);
-      document.getElementById('name').disabled = false;
-
-      document.getElementById('edit-name').style.display = 'none';
-
-      console.log('done');
-
-    }
-
-    editEmail = () => {
-      const btn = document.createElement("button");
-      btn.type = 'submit';
-      btn.classList = 'btn btn-dark rounded ml-3';
-      btn.innerText = 'Edit';
-      document.getElementById('emailArea').appendChild(btn);
-      document.getElementById('email').disabled = false;
-
-      document.getElementById('edit-email').style.display = 'none';
-
-
-    }
-
     // needs some modifications
     editPassword = () => {
       const btn = document.createElement("button");
       btn.type = 'submit';
-      btn.classList = 'btn btn-dark rounded ml-3';
+      btn.classList = 'btn btn-lg btn-dark d-block w-50 mt-4';
       btn.innerText = 'Edit';
       document.getElementById('passwordArea').appendChild(btn);
       document.getElementById('password').disabled = false;
+      document.getElementById('password').value = '';
 
       document.getElementById('edit-password').style.display = 'none';
+      document.getElementById('passwordConfirmation').style.display = 'block';
+
 
     }
 

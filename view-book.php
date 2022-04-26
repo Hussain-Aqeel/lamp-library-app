@@ -34,7 +34,7 @@
         <span class="badge bg-secondary text-white p-2">Psychology</span>
         <p class="mt-5">Read about the author</p>
         <a class="text-primary mt-0" target="_blank" href="https://en.wikipedia.org/wiki/Robert_Greene_(American_author)">Robert Greene</a>
-
+        <button type="submit" class="btn btn-lg btn-dark d-block w-50 mt-4">Borrow Now</button>
       </div>
 
   </div>
@@ -55,15 +55,14 @@
 
       <h5 class="mt-5">Add comment</h5>
       <form style="width: 89%;">
-        <textarea style="width: 100%; height: 8em;" name="" id=""></textarea>
+        <textarea style="width: 100%; height: 8em;" name="" id="textArea"></textarea>
         <div class="my-4 d-flex justify-content-end">
-          <button type="button" class="btn btn-lg btn-danger">Clear</button>
+          <button id="clear" type="button" class="btn btn-lg btn-danger">Clear</button>
           <button type="button" class="ml-3 btn btn-lg btn-primary">Submit</button>
         </div>
         
       </form>
     </div>
-    
     
   </div>
   
@@ -82,6 +81,15 @@
           e.preventDefault()
           $(this).tab('show')
       });
+      
+  </script>
+  <script>
+    function clearField() {
+      document.getElementById('textArea').value = '';
+    }
+
+    const clearBtn = document.getElementById('clear');
+    clearBtn.addEventListener('click', clearField);
   </script>
 </body>
 </html>

@@ -43,7 +43,7 @@ mysql -uroot -proot -e "create database library;"
 #Downloading the schema
 apt-get install -y wget 
 
-wget -O schema.sql "https://drive.google.com/uc?export=download&id=1N9z-mKq7MsVAHzB0nfOLFnD5CAGEkESz"
+wget -O schema.sql "https://drive.google.com/uc?export=download&id=1Qk9NbmZktRpc3hR6D1v0eqpR2ODMHfun"
 
 #populate data into library database
 mysql -uroot -proot library < schema.sql

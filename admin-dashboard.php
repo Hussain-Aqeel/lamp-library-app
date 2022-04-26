@@ -16,12 +16,10 @@
 
   <div class="container" style="min-height: 85vh;">
     <br>
-    <h1 class="mb-2 mt-4 d-flex justify-content-between">{{ Admin's name }}
-      <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">Admin</span>
-    </h1>
+    <h1 class="mb-2 mt-4 d-flex justify-content-between">{{ Admin's name }}</h1>
 
     <br>
-    <h1 class="mt-4 mb-3">List Of members</h1>
+    <h1 class="mt-4 mb-3">List Of customers</h1>
 
     <div class="row">
       <div class="mb-5 col-9">
@@ -120,6 +118,37 @@
                 class="btn btn-danger" 
                 data-toggle="modal" 
                 data-target="#delete-modal">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <br>
+        <br>
+        <h1 class="mb-3 mt-4">Borrows</h1>  
+
+        <table class="table table-hover" id="table2">
+          <thead>
+            <tr class="header">
+              <th scope="col">Reserve_Date</th>
+              <th scope="col">ISBN_Code</th>
+              <th scope="col">Status</th>
+              <th scope="col"> </th>
+            </tr>
+          </thead>
+          <tbody class="items">
+            <tr class="table-light" id="<%= counter++ %> ">
+              <td class="title row-data">5/2/2022</td>
+              <td class="lang row-data">11556626849</td>
+              <td class="subject row-data">active</td>
+              <td><button type="button" 
+                class="btn btn-danger">cancel</button></td>
+            </tr>
+            <tr class="table-light" id="<%= counter++ %> ">
+              <td class="title row-data">5/2/2022</td>
+              <td class="lang row-data">11556626849</td>
+              <td class="subject row-data">active</td>
+              <td><button type="button" 
+                class="btn btn-danger">cancel</button></td>
             </tr>
           </tbody>
         </table>

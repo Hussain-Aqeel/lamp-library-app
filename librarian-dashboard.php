@@ -22,7 +22,9 @@
 
   <br>
   <br>
-  <h1 class="mt-4 mb-3">List of Books</h1>
+  <div class="row">
+      <div class="col-9">
+      <h1 class="mt-4 mb-3">List of Books</h1>
         <!--  -->
         <table class="table table-hover" id="table">
           <thead>
@@ -68,6 +70,93 @@
             </tr>
           </tbody>
         </table>
+
+
+        <br>
+        <br>
+        <h1 class="mb-3 mt-4">Borrows</h1>  
+
+        <table class="table table-hover" id="table2">
+          <thead>
+            <tr class="header">
+              <th scope="col">Reserve_Date</th>
+              <th scope="col">ISBN_Code</th>
+              <th scope="col">Status</th>
+              <th scope="col"> </th>
+            </tr>
+          </thead>
+          <tbody class="items">
+            <tr class="table-light" id="<%= counter++ %> ">
+              <td class="title row-data">5/2/2022</td>
+              <td class="lang row-data">11556626849</td>
+              <td class="subject row-data">active</td>
+              <td><button type="button" 
+                class="btn btn-danger">cancel</button></td>
+            </tr>
+            <tr class="table-light" id="<%= counter++ %> ">
+              <td class="title row-data">5/2/2022</td>
+              <td class="lang row-data">11556626849</td>
+              <td class="subject row-data">active</td>
+              <td><button type="button" 
+                class="btn btn-danger">cancel</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+        <div id="addBook" class="col-3">
+
+        <h3 class="font-weight-bold">Add a new book</h3>
+        <form>
+            <div class="form-group">
+              <label class="col-form-label col-form-label-sm" for="title">Title</label>
+              <input class="form-control form-control-sm"
+                      required
+                      name="title" 
+                      type="text" 
+                      id="title"
+                      >
+            </div>
+            <div class="form-group">
+              <label class="col-form-label col-form-label-sm" for="genre">Genre</label>
+              <input class="form-control form-control-sm"
+                      required 
+                      name="genre" 
+                      type="text" 
+                      id="genre"
+                      >
+            </div>
+            <div class="form-group">
+              <label class="col-form-label col-form-label-sm" for="author">Author</label>
+              <input class="form-control form-control-sm"
+                      required 
+                      name="author" 
+                      type="text" 
+                      id="author"
+                      >
+            </div>
+            <div class="form-group">
+              <label class="col-form-label col-form-label-sm" for="author-page">Author's wiki page</label>
+              <input class="form-control form-control-sm" 
+                      name="author-page" 
+                      type="text" 
+                      id="author-page"
+                      >
+            </div>
+            <div class="form-group">
+              <label class="col-form-label col-form-label-sm" for="pic">Choose a picture</label>
+              <input class="form-control form-control-lg pb-4"
+                      required
+                      name="pic" 
+                      type="file" 
+                      accept="image/*"
+                      id="pic"
+                      >
+            </div>
+            <button type="submit" class="btn btn-dark d-block w-100">Add book</button>
+        </form>
+      </div>
+  </div>
 
 
 </div>
