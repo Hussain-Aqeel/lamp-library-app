@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+require_once 'customer_auth.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +23,8 @@
 
 
 <div class="container mb-5" style="min-height: 79vh;">
-  <h1 class="my-4 d-flex justify-content-between">{{Customer's name}}
-    <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">{{ Role }}</span>
+  <h1 class="my-4 d-flex justify-content-between"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?>
+    <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">Member</span>
   </h1>
   <hr>
 

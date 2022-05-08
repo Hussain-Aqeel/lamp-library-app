@@ -1,9 +1,4 @@
-<?php
-$loggedIn = true;
-$roles = array('customer', 'librarian', 'admin');
-$role = 'customer'; 
-?>
-
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,34 +15,31 @@ $role = 'customer';
 <body>
 
 <?php include('nav.php') ?>
-
-<?php 
-if ($loggedIn && $role == $roles[0]) { ?>
+<?php if(isset($_SESSION['logged_in'])) { ?>
+<?php if ($_SESSION["role"] == 3) { ?>
     <header id="showcase">
       <div class="container">
         <div class="showcase-container">
           <div class="showcase-content">
-            <h2 class="mr-5">Welcome Again, {{ customer's name }}</h2>
+            <h2 class="mr-5">Welcome Again, <?php echo $_SESSION["fname"]?></h2>
             <p>Enjoy our amazing collection of books!</p>
             <a class="btn btn-outline-light rounded mt-4" href="browse-books.php">Browse books</a>
           </div>
         </div>
       </div>
     </header>
-<?php 
-} elseif ($loggedIn && ($role == $roles[1] || $role == $roles[2])) { ?>
+<?php } else { ?>
     <header id="showcase">
         <div class="container">
             <div class="showcase-container">
             <div class="showcase-content">
-                <h2 class="mr-5">Welcome Again, {{ librarian or admin name }}</h2>
+                <h2 class="mr-5">Welcome Again, <?php echo $_SESSION["fname"]?></h2>
                 <p>Go to your Dashboard to manage the platform..</p>
             </div>
             </div>
         </div>
     </header>
-<?php   
-} else { ?>
+<?php } } else { ?>
 <header id="showcase">
     <div class="container">
         <div class="showcase-container">

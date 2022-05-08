@@ -1,14 +1,31 @@
 <?php
 
-// require_once("auth.php");
+include_once "connection.php";
+require_once "check_logged_in.php";
 
-include "connection.php";
+if (session_status() != PHP_SESSION_NONE) {
+    switch ($_SESSION["role"])
+    {
+        case 1:
+            header('Location: admin-dashboard.php');
+            break;
+        case 2:
+            header('Location: librarian-dashboard.php');
+            break;
+        case 3:
+            header('Location: customer-dashboard.php');
+            break;
+        default:
+            header('Location: homepage.php');
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  session_start();
+
   // /** @var mysqli $link */
-  $email = mysqli_real_escape_string($link, $_POST['email']);
+    /** @var mysqli $link */
+    $email = mysqli_real_escape_string($link, $_POST['email']);
   $password = mysqli_real_escape_string($link, $_POST['password']);
 
   if ($email != "" && $password != "") {
@@ -20,10 +37,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $count = isset($row) ? count($row) : null;
 
       if (isset($count) && $count > 0 ) {
-          $_SESSION["email${email}"] = $email;
-          header('Location: homepage.php');
+
+          $sql_query = "SELECT id FROM sessions ORDER BY id DESC limit 1";
+          $result = mysqli_query($link, $sql_query);
+          $row2 = mysqli_fetch_array($result);
+
+          $sql_query = "INSERT INTO sessions VALUES ('')";
+          $result = mysqli_query($link, $sql_query);
+
+          $cookie_value = md5($row2['id']);
+
+
+
+          session_id($cookie_value);
+          session_start();
+
+          $_SESSION["logged_in"] = true;
+          $_SESSION["fname"] = $row['fname'];
+          $_SESSION["lname"] = $row['lname'];
+          $_SESSION["role"] = $row['role_id'];
+          $_SESSION["status"] = $row['status'];
+
+          switch ($_SESSION["role"])
+          {
+              case 1:
+                  header('Location: admin-dashboard.php');
+                  break;
+              case 2:
+                  header('Location: librarian-dashboard.php');
+                  break;
+              case 3:
+                  header('Location: customer-dashboard.php');
+                  break;
+              default:
+                  header('Location: homepage.php');
+          }
       } else {
-          $_SESSION['error_login'] = "Invalid username and password";
+          $_SESSION['error_login'] = "Invalid username or password";
       }
   }
 }
@@ -53,14 +103,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <div class="card-body">
           <h1 class="text-center mb-3"><i class="fa fa-sign-in"></i> Login</h1>          
-          <!-- TODO: add flush messages -->
+          <!-- TODO: add flash messages -->
             <?php
-            if($_SESSION['error_login'])
+            if(isset($_SESSION['error_login']))
                 echo '<div class="alert alert-danger" role="alert">' .$_SESSION['error_login']. '</div>';
             ?>
           <div class="tab-content mt-3">
             <div class="tab-pane active" id="member" role="tabpanel">
-              <form action="/login.php" method="POST">
+              <form action="" method="POST">
                 <div class="form-group">
                   <label for="email">email</label>
                   <input

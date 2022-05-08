@@ -47,3 +47,9 @@ wget -O schema.sql "https://drive.google.com/uc?export=download&id=1Qk9NbmZktRpc
 
 #populate data into library database
 mysql -uroot -proot library < schema.sql
+
+sudo apt install libapache2-mod-security2 -y
+
+sudo systemctl restart apache2
+
+apt-cache show libapache2-mod-security2

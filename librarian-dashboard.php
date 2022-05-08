@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+require_once 'auth_lib.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +22,7 @@
 
 <div class="container mb-5" style="min-height: 82vh;">
   <br>
-  <h1 class="mt-4 d-flex justify-content-between">{{ librarian's name }}
+  <h1 class="mt-4 d-flex justify-content-between"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname'] ?>
     <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">LIBRARIAN</span>
   </h1>
 

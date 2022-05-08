@@ -1,9 +1,5 @@
-<?php
-$loggedIn = true;
-$roles = array('customer', 'librarian', 'admin');
-$role = 'customer';
-
-if ($loggedIn && $role == $roles[0]) { ?>
+<?php if(isset($_SESSION['logged_in'])) { ?>
+<?php if ($_SESSION['role'] == 3) { ?>
     <!-- customer navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
         <div class="container d-flex align-items-med-center justify-content-med-center align-content-med-center">
@@ -38,10 +34,10 @@ if ($loggedIn && $role == $roles[0]) { ?>
                         href="#" 
                         role="button" 
                         aria-haspopup="true" 
-                        aria-expanded="true">{{ customer's name }}</a>
+                        aria-expanded="true"><?php echo $_SESSION['fname'] ?></a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item text-dark bg-light" href="account-info.php">Account information</a> 
-                            <a class="dropdown-item text-white bg-danger" href="#">Logout</a>
+                            <a class="dropdown-item text-white bg-danger" href="logout.php">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -50,7 +46,7 @@ if ($loggedIn && $role == $roles[0]) { ?>
     </nav>
 
 <?php 
-} elseif ($loggedIn && $role == $roles[1]) { ?>
+} elseif ($_SESSION['role'] == 2) { ?>
     <!-- customer navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
         <div class="container d-flex align-items-med-center justify-content-med-center align-content-med-center">
@@ -81,10 +77,10 @@ if ($loggedIn && $role == $roles[0]) { ?>
                         href="#" 
                         role="button" 
                         aria-haspopup="true" 
-                        aria-expanded="true">{{ librarian's name }}</a>
+                        aria-expanded="true"><?php echo $_SESSION['fname'] ?></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item text-dark bg-light" href="account-info.php">Account information</a> 
-                            <a class="dropdown-item text-white bg-danger" href="#">Logout</a>
+                            <a class="dropdown-item text-dark bg-light" href="account-info.php">Account information</a>
+                            <a class="dropdown-item text-white bg-danger" href="logout.php">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -93,7 +89,7 @@ if ($loggedIn && $role == $roles[0]) { ?>
     </nav>
 
 <?php
-} elseif ($loggedIn && $role == $roles[2]) { ?>
+} else { ?>
     <!-- admin navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
         <div class="container d-flex align-items-med-center justify-content-med-center align-content-med-center">
@@ -103,8 +99,8 @@ if ($loggedIn && $role == $roles[0]) { ?>
             <button class="navbar-toggler" 
                     type="button" 
                     data-toggle="collapse" 
-                    data-target="#navbarColor01" 
-                    aria-controls="navbarColor01" 
+                    data-target="#navbarColor01"
+                    aria-controls="navbarColor01"
                     aria-expanded="false" 
                     aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -124,10 +120,10 @@ if ($loggedIn && $role == $roles[0]) { ?>
                            href="#" 
                            role="button" 
                            aria-haspopup="true" 
-                           aria-expanded="true">{{ admin's name }}</a>
+                           aria-expanded="true"><?php echo $_SESSION['fname'] ?></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item text-dark bg-light" href="account-info.php">Account information</a> 
-                            <a class="dropdown-item text-white bg-danger" href="#">Logout</a>
+                            <a class="dropdown-item text-dark bg-light" href="account-info.php">Account information</a>
+                            <a class="dropdown-item text-white bg-danger" href="logout.php">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -136,7 +132,7 @@ if ($loggedIn && $role == $roles[0]) { ?>
     </nav>
 
 <?php   
-} else { ?>
+} } else { ?>
     <!-- Logged out navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
