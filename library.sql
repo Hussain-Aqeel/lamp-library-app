@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hussain_project`
+-- Database: `library`
 --
 
 -- --------------------------------------------------------
@@ -39,11 +39,14 @@ CREATE TABLE `author` (
 
 INSERT INTO `author` (`id`, `name`, `wiki_page`) VALUES
 (1, 'Lou Gerstner', 'https://www.wikiwand.com/en/Lou_Gerstner'),
-(2, 'J.K Rolling', 'https://www.wikiwand.com/en/Lou_Gerstner'),
-(3, 'Lou Gerstner', 'https://en.wikipedia.org/wiki/J._K._Rowling'),
-(4, 'Fyodor Dostoevsky', 'https://en.wikipedia.org/wiki/Fyodor_Dostoevsky'),
-(5, 'Robert Greene', 'https://en.wikipedia.org/wiki/Robert_Greene_(American_author)'),
-(6, 'Viktor E. Frankl', 'https://en.wikipedia.org/wiki/Viktor_Frankl');
+(2, 'J.K Rolling', 'https://en.wikipedia.org/wiki/J._K._Rowling'),
+(3, 'Fyodor Dostoevsky', 'https://en.wikipedia.org/wiki/Fyodor_Dostoevsky'),
+(4, 'Robert Greene', 'https://en.wikipedia.org/wiki/Robert_Greene_(American_author)'),
+(5, 'Jordan Peterson', 'https://en.wikipedia.org/wiki/Jordan_Peterson'),
+(6, 'Viktor E. Frankl', 'https://en.wikipedia.org/wiki/Viktor_Frankl'),
+(7, 'Friedrich Nietzsche', 'https://en.wikipedia.org/wiki/Friedrich_Nietzsche'),
+(8, 'Elif Shafak', 'https://en.wikipedia.org/wiki/Elif_Shafak'),
+(9, 'Plato', 'https://en.wikipedia.org/wiki/Plato');
 
 -- --------------------------------------------------------
 
@@ -53,15 +56,29 @@ INSERT INTO `author` (`id`, `name`, `wiki_page`) VALUES
 
 CREATE TABLE `book` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
   `author_id` int(11) NOT NULL,
   `genre_id` int(11) NOT NULL,
-  `image` binary(1) NOT NULL,
+  `image_url` varchar(255) NOT NULL,
   `description` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
+--
+-- Dumping data for table `book`
+--
+INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
+(1, '12 Rules For Life', 5, 9, './assets/img/12-rules-for-life.jpg', 'description for 12 rules for life'),
+(2, 'Beyond Good and Evil', 7, 3, './assets/img/beyond-good-and-evil.jpg', 'description for beyond good and evil'),
+(3, 'Crime and Punishment', 3, 7, './assets/img/crime-and-punishment.jpg', 'description for crime and punishment'),
+(4, "Who Says Elephants Can't Dance", 1, 2, './assets/img/elephants-dance.jpg', 'description for who says elephants cant dance'),
+(5, 'Forty Rules of Love', 8, 7, './assets/img/fortyrulesoflove.jpg', 'description for forty rules of love'),
+(6, 'Harry Potter and the Chamber of Secrets', 2, 4, './assets/img/harry-potter.jpg', 'description for harry potter'),
+(7, 'The 48 Laws of Power', 4, 5, './assets/img/laws-of-power.jpg', 'description for 48 laws of power'),
+(8, 'The Republic', 9, 3, './assets/img/republic.jpg', 'description for the republic'),
+(9, "Man's Search for Meaning", 6, 5, './assets/img/search-for-meaning.jpg', 'description for searching for meaning');
 
+-- --------------------------------------------------------
 --
 -- Table structure for table `borrowing`
 --
@@ -74,7 +91,15 @@ CREATE TABLE `borrowing` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
+-- Dumping data for table `borrowing`
+--
+INSERT INTO `borrowing` (`id`, `user_id`, `book_id`, `date`) VALUES
+(1, 3, 5, '2022-04-28'),
+(2, 3, 1, '2022-04-25'),
+(3, 4, 8, '2022-05-01'),
+(3, 4, 4, '2022-03-15');
 
+-- --------------------------------------------------------
 --
 -- Table structure for table `comment`
 --
@@ -88,7 +113,31 @@ CREATE TABLE `comment` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
+-- Dumping data for table `comment`
+--
+INSERT INTO `comment` (`id`, `user_id`, `book_id`, `comment_text`, `date`) VALUES
+(1, 3, 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(2, 4, 1, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2021-04-21'),
+(3, 3, 2, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2020-01-21'),
+(4, 4, 2, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2021-04-11'),
+(5, 3, 3, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2020-06-06'),
+(6, 4, 3, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(7, 3, 4, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(8, 4, 4, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(9, 3, 5, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(10, 4, 5, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(11, 3, 6, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(12, 4, 6, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(13, 3, 7, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(14, 4, 7, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(15, 3, 8, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(16, 4, 8, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(17, 3, 9, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21'),
+(18, 4, 9, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','2022-04-21');
 
+
+
+-- --------------------------------------------------------
 --
 -- Table structure for table `genre`
 --
@@ -196,7 +245,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `role_id`, `status`, `email`, `password`, `fname`, `lname`) VALUES
 (1, 1, 1, 'admin@m.com', '12345', 'ahmed', 'ali'),
 (2, 2, 1, 'lib@m.com', '12345', 'khalid', 'fuad'),
-(3, 3, 1, 'user@m.com', '12345', 'samir', 'hassan');
+(3, 3, 1, 'user@m.com', '12345', 'samir', 'hassan'),
+(4, 3, 1, 'user2@m.com', '12345', 'Rashid', 'saad');
 
 --
 -- Indexes for dumped tables
