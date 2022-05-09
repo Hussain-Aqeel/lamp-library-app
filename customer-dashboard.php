@@ -1,9 +1,7 @@
 <?php
-session_start();
-
-require_once 'customer_auth.php';
-
-?>
+  session_start();
+  include_once('connection.php');
+  require_once 'customer_auth.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,37 +21,59 @@ require_once 'customer_auth.php';
 
 
 <div class="container mb-5" style="min-height: 79vh;">
-  <h1 class="my-4 d-flex justify-content-between"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?>
+  <h1 class="my-4 d-flex justify-content-between">
+    <?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?>
     <span class="lm-5 mb-2 lg-sm badge rounded-pill bg-warning">Member</span>
   </h1>
   <hr>
+
+  <?php 
+  $borrowing_query = "SELECT * FROM borrowing WHERE user_id='{$_SESSION["id"]}'";
+  $borrowing_query_result = mysqli_query($link, $borrowing_query);
+  $borrowing_result = mysqli_fetch_array($borrowing_query_result);
+
+?>
 
   <h1 class="mb-4 ml-4">Borrows</h1>  
 
       <table class="table table-hover" id="table2">
         <thead>
           <tr class="header">
-            <th scope="col">Reserve_Date</th>
-            <th scope="col">ISBN_Code</th>
-            <th scope="col">Status</th>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Date</th>
           </tr>
         </thead>
         <tbody class="items">
-          <tr class="table-light" id="<%= counter++ %> ">
-            <td class="title row-data">5/2/2022</td>
-            <td class="lang row-data">11556626849</td>
-            <td class="subject row-data">active</td>
+        
+        <?php 
+        if ($borrowing_query_result->num_rows > 0) {
+          
+          while($borrowing_result = $borrowing_query_result->fetch_assoc()) {
+
+            $books_query = "SELECT * FROM book WHERE id='{$borrowing_result["book_id"]}'";
+            $books_query_result = mysqli_query($link, $books_query);
+            $books_result = mysqli_fetch_array($books_query_result);
+            
+          ?>
+
+          <tr class="table-light">
+            <td class="row-data"> <?php echo $books_result["id"] ?> </td>
+            <td class="row-data"> <?php echo $books_result["title"] ?> </td>
+            <td class="row-data"> <?php echo $books_result["author_id"] ?> </td>
+            <td class="row-data"> <?php echo $books_result["genre_id"] ?> </td>
+            <td class="row-data"> <?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?> </td>
           </tr>
-          <tr class="table-light" id="<%= counter++ %> ">
-            <td class="title row-data">5/2/2022</td>
-            <td class="lang row-data">11556626849</td>
-            <td class="subject row-data">active</td>
-          </tr>
+
+        <?php } ?>
+      <?php } ?>
         </tbody>
       </table>
 </div>
 
-<?php include('footer.php') ?>
+<?php include('footer.php'); ?>
 
 <!-- bootstrap javascript files-->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

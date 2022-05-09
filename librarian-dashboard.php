@@ -1,7 +1,38 @@
 <?php
-session_start();
+  session_start();
+  require_once "connection.php";
+  require_once 'auth_lib.php';
 
-require_once 'auth_lib.php';
+  $sql_query = "SELECT * FROM book";
+  $result = mysqli_query($link, $sql_query);
+  $row = mysqli_fetch_array($result);
+  $last_id = 0;
+
+  while($row = $result->fetch_assoc()) {
+    $last_id = $row["id"];
+  }
+
+  $last_id++;
+
+  // TODO: add a book to database
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // /** @var mysqli $link */
+      /** @var mysqli $link */
+    $title = mysqli_real_escape_string($link, $_POST['title']);
+    $genre = mysqli_real_escape_string($link, $_POST['genre']);
+    $author = mysqli_real_escape_string($link, $_POST['author']);
+    $genre = mysqli_real_escape_string($link, $_POST['genre']);
+    $authorPage = mysqli_real_escape_string($link, $_POST['author-page']);
+    $pic = mysqli_real_escape_string($link, $_POST['pic']);
+  
+
+    $sql_insert_query = 
+      "INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
+      ({$last_id}, '{$title}', {$author}, ${genre}, '{$pic}');";
+
+  }
+  
 ?>
 
 <!DOCTYPE html>
@@ -36,8 +67,8 @@ require_once 'auth_lib.php';
           <thead>
             <tr class="header">
               <th scope="col">ID</th>
-              <th scope="col">genre</th>
               <th scope="col">title</th>
+              <th scope="col">genre</th>
               <th scope="col">author</th>
               <th scope="col"> </th>
               <th scope="col"> </th>
@@ -45,35 +76,42 @@ require_once 'auth_lib.php';
             </tr>
           </thead>
           <tbody class="items">
-            <tr class="table-light" id="">
-              <td class="isbn row-data">1</td>
-              <td class="title row-data">Fiction</td>
-              <td class="lang row-data">Harry Potter and the Goblet of Fire</td>
-              <td class="subject row-data">J.K Rolling</td>
-              <td><button type="button" 
-                class="btn btn-dark"
-                data-toggle="modal" 
-                data-target="#edit-modal">Edit</button></td>
-              <td><button type="button" 
-                class="btn btn-danger" 
-                data-toggle="modal" 
-                data-target="#delete-modal">Delete</button></td>
-            </tr>
 
-            <tr class="table-light" id="">
-              <td class="isbn row-data">2</td>
-              <td class="title row-data">Novel</td>
-              <td class="lang row-data">Crime and Punishment</td>
-              <td class="subject row-data">Fyodor Dostoevsky</td>
-              <td><button type="button" 
-                class="btn btn-dark"
-                data-toggle="modal" 
-                data-target="#edit-modal">Edit</button></td>
-              <td><button type="button" 
-                class="btn btn-danger" 
-                data-toggle="modal" 
-                data-target="#delete-modal">Delete</button></td>
-            </tr>
+          <?php 
+
+          $sql_query = "SELECT * FROM book";
+          $result = mysqli_query($link, $sql_query);
+          $row = mysqli_fetch_array($result);
+          
+          if ($result->num_rows > 0) {
+        
+            // output data of each row
+            while($row = $result->fetch_assoc()) {
+              $image_url = $row["image_url"]; 
+              $author_name_query = "SELECT * FROM author WHERE id='{$row["author_id"]}'";
+              $author_name_result = mysqli_query($link, $author_name_query);
+              $author_name = mysqli_fetch_array($author_name_result);
+
+              $genre_name_query = "SELECT * FROM genre WHERE id='{$row["genre_id"]}'";
+              $genre_name_result = mysqli_query($link, $genre_name_query);
+              $genre_name = mysqli_fetch_array($genre_name_result);
+              ?>
+              <tr class="table-light" id="<?php echo htmlspecialchars($row["id"]); ?>">
+                <td class="isbn row-data"><?php echo $row["id"] ?></td>
+                <td class="title row-data"><?php echo $row["title"] ?></td>
+                <td class="lang row-data"><?php echo $genre_name["name"] ?></td>
+                <td class="subject row-data"><?php echo $author_name["name"] ?></td>
+                <td><button type="button" 
+                  class="btn btn-dark"
+                  data-toggle="modal" 
+                  data-target="#edit-modal">Edit</button></td>
+                <td><button type="button" 
+                  class="btn btn-danger" 
+                  data-toggle="modal" 
+                  data-target="#delete-modal">Delete</button></td>
+              </tr>
+            <?php } ?>
+          <?php } ?>
           </tbody>
         </table>
 
@@ -85,27 +123,42 @@ require_once 'auth_lib.php';
         <table class="table table-hover" id="table2">
           <thead>
             <tr class="header">
-              <th scope="col">Reserve_Date</th>
-              <th scope="col">ISBN_Code</th>
-              <th scope="col">Status</th>
+              <th scope="col">id</th>
+              <th scope="col">user</th>
+              <th scope="col">book</th>
+              <th scope="col">borrowing date</th>
               <th scope="col"> </th>
             </tr>
           </thead>
           <tbody class="items">
-            <tr class="table-light" id="<%= counter++ %> ">
-              <td class="title row-data">5/2/2022</td>
-              <td class="lang row-data">11556626849</td>
-              <td class="subject row-data">active</td>
-              <td><button type="button" 
-                class="btn btn-danger">cancel</button></td>
-            </tr>
-            <tr class="table-light" id="<%= counter++ %> ">
-              <td class="title row-data">5/2/2022</td>
-              <td class="lang row-data">11556626849</td>
-              <td class="subject row-data">active</td>
-              <td><button type="button" 
-                class="btn btn-danger">cancel</button></td>
-            </tr>
+          <?php 
+            $borrowing_query = "SELECT * FROM borrowing";
+            $borrowing_query_result = mysqli_query($link, $borrowing_query);
+            $borrowing_result = mysqli_fetch_array($borrowing_query_result);
+
+
+            if ($borrowing_query_result->num_rows > 0) {
+              
+              while($borrowing_result = $borrowing_query_result->fetch_assoc()) {
+
+                $books_query = "SELECT * FROM book WHERE id='{$borrowing_result["book_id"]}'";
+                $books_query_result = mysqli_query($link, $books_query);
+                $books_result = mysqli_fetch_array($books_query_result);
+                
+                $users_query = "SELECT * FROM user WHERE id='{$borrowing_result["user_id"]}'";
+                $users_query_result = mysqli_query($link, $users_query);
+                $users_result = mysqli_fetch_array($users_query_result);
+          ?>
+                <tr class="table-light" id="">
+                  <td class="title row-data"><?php echo $borrowing_result["id"] ?></td>
+                  <td class="lang row-data"><?php echo $users_result["fname"]. ' ' .$users_result["lname"] ?></td>
+                  <td class="subject row-data"><?php echo $book_result["title"] ?></td>
+                  <td class="subject row-data"><?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?></td>
+                  <td><button type="button" 
+                    class="btn btn-danger">cancel</button></td>
+                </tr>
+            <?php } ?>
+          <?php } ?>
           </tbody>
         </table>
       </div>

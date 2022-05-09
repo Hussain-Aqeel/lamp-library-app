@@ -22,15 +22,14 @@ if (session_status() != PHP_SESSION_NONE) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-
   // /** @var mysqli $link */
     /** @var mysqli $link */
-    $email = mysqli_real_escape_string($link, $_POST['email']);
+  $email = mysqli_real_escape_string($link, $_POST['email']);
   $password = mysqli_real_escape_string($link, $_POST['password']);
 
   if ($email != "" && $password != "") {
 
-      $sql_query = "select * from User where email='" . $email . "' and password='" . $password . "'";
+      $sql_query = "SELECT * FROM user WHERE email='{$email}' AND password='{$password}'";
       $result = mysqli_query($link, $sql_query);
       $row = mysqli_fetch_array($result);
 
@@ -53,8 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           session_start();
 
           $_SESSION["logged_in"] = true;
+          $_SESSION["id"] = $row['id'];
           $_SESSION["fname"] = $row['fname'];
           $_SESSION["lname"] = $row['lname'];
+          $_SESSION["email"] = $row['email'];
           $_SESSION["role"] = $row['role_id'];
           $_SESSION["status"] = $row['status'];
 
@@ -110,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ?>
           <div class="tab-content mt-3">
             <div class="tab-pane active" id="member" role="tabpanel">
-              <form action="" method="POST">
+              <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
                 <div class="form-group">
                   <label for="email">email</label>
                   <input

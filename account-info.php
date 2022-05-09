@@ -1,3 +1,5 @@
+<?php session_start() ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +29,7 @@
                    name="name" 
                    type="text" 
                    class="form-control" 
-                   value="{{user's name}}" 
+                   value="<?php echo htmlspecialchars($_SESSION["fname"]. " " .$_SESSION["lname"]); ?>" 
                    disabled
                    style="padding: 1.5em 0 1.5em 1em;"
                    >
@@ -41,7 +43,7 @@
                   name="email" 
                   type="text" 
                   class="form-control" 
-                  value="{{ user's email should be showing here }}" 
+                  value="<?php echo htmlspecialchars($_SESSION["email"]); ?>" 
                   disabled
                   style="padding: 1.5em 0 1.5em 1em;"
                   >

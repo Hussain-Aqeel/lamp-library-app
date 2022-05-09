@@ -1,4 +1,23 @@
-<?php session_start() ?>
+<?php 
+  session_start(); 
+  include_once "connection.php";
+
+  $book_id = $_GET['id'];
+  $sql_query = "SELECT * FROM book WHERE id='{$book_id}'";
+  $result = mysqli_query($link, $sql_query);
+  $row = mysqli_fetch_array($result);
+
+  $image_url = $row["image_url"]; 
+  $author_name_query = "SELECT * FROM author WHERE id='{$row["author_id"]}'";
+  $author_name_result = mysqli_query($link, $author_name_query);
+  $author_name = mysqli_fetch_array($author_name_result);
+
+  $genre_name_query = "SELECT * FROM genre WHERE id='{$row["genre_id"]}'";
+  $genre_name_result = mysqli_query($link, $genre_name_query);
+  $genre_name = mysqli_fetch_array($genre_name_result);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://bootswatch.com/4/sandstone/bootstrap.min.css">
     <link rel="stylesheet" href="./assets/stylesheet/stylesheet.css">
-    <title>Library App - book's title</title>
+    <title>Library App - <?php echo $row["title"] ?></title>
 </head>
 <body>
 
@@ -23,18 +42,18 @@
       grid-template-columns: repeat(2, 1fr); grid-gap: 2em;">
       
 
-      <img src="./assets/img/laws-of-power.jpg" alt="laws of power" width="500" height="600" style="margin-top: 10em;">
+      <img src="<?php echo htmlspecialchars($image_url); ?>" alt="laws of power" width="500" height="600" style="margin-top: 10em;">
 
       <div id="book-info" style="background-color: #fff; height: 70%; margin-top: 10em; padding: 1em; overflow: none;">
-        <h3>48 rules of power</h3>
-          <p class="text-muted">By Robert Greene</p>
+        <h3><?php echo $row["title"] ?></h3>
+          <p class="text-muted">By <?php echo $author_name["name"] ?></p>
         <!-- <p class="text-muted">Psychology</p> -->
         <hr>
         <!-- <p class="lead"><span style="font-weight: bold;">Author: </span>Robert Greene </p> -->
-        <p class="lead"><span style="font-weight: bold;">Description: </span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore minima repellendus cum cumque animi ab ratione sint earum quisquam odio!</p>
-        <span class="badge bg-secondary text-white p-2">Psychology</span>
+        <p class="lead"><span style="font-weight: bold;">Description: </span><?php echo $row["description"] ?></p>
+        <span class="badge bg-secondary text-white p-2"><?php echo $genre_name["name"] ?></span>
         <p class="mt-5">Read about the author</p>
-        <a class="text-primary mt-0" target="_blank" href="https://en.wikipedia.org/wiki/Robert_Greene_(American_author)">Robert Greene</a>
+        <a class="text-primary mt-0" target="_blank" href="<?php echo htmlspecialchars($author_name["wiki_page"]); ?>"><?php echo $author_name["name"]?></a>
         <button type="submit" class="btn btn-lg btn-dark d-block w-50 mt-4">Borrow Now</button>
       </div>
 
@@ -44,15 +63,26 @@
     <hr>
     <h2>Comments</h2>
     <div style="display: flex; flex-direction: column; justify-content: center; padding-bottom: 10em; padding-top: 1em; background-color: #f4f4f4; padding-left: 2em;">
-      <div style="background-color: #fff; width: 90%; margin-top: 1em; padding: 1em;">
-        <strong>User184687</strong>
-        <p class="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque omnis iste ex dolorum? Vel obcaecati voluptatibus quibusdam, error impedit quasi reprehenderit repellendus asperiores accusantium in?</p>
-        
-      </div>
-      <div style="background-color: #fff; width: 90%; margin-top: 1em; padding: 1em;">
-        <strong>User616875</strong>
-        <p class="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque omnis iste ex dolorum? Vel obcaecati voluptatibus quibusdam, error impedit quasi reprehenderit repellendus asperiores accusantium in?</p>
-      </div>
+      <?php 
+
+        $comments_query = "SELECT * FROM comment WHERE book_id='{$book_id}'";
+        $comments_result = mysqli_query($link, $comments_query);
+        $comments = mysqli_fetch_array($comments_result);
+
+        $user_query = "SELECT * FROM user WHERE id='{$comments["user_id"]}'";
+        $user_result = mysqli_query($link, $user_query);
+        $user = mysqli_fetch_array($user_result);
+      
+        if ($comments_result->num_rows > 0) {
+
+          // output data of each row
+          while($comments = $comments_result->fetch_assoc()) { ?>
+            <div style="background-color: #fff; width: 90%; margin-top: 1em; padding: 1em;">
+              <strong><?php echo $user["fname"]. ' ' .$user["lname"] ?></strong>
+              <p class="mt-2"> <?php echo $comments["comment_text"]?> </p>
+            </div>
+          <?php } ?>
+      <?php } ?>
 
       <h5 class="mt-5">Add comment</h5>
       <form style="width: 89%;">
