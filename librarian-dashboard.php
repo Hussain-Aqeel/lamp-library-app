@@ -2,6 +2,7 @@
   session_start();
   require_once "connection.php";
   require_once 'auth_lib.php';
+/** @var mysqli $link */
 
   $sql_query = "SELECT * FROM book";
   $result = mysqli_query($link, $sql_query);
@@ -152,7 +153,7 @@
                 <tr class="table-light" id="">
                   <td class="title row-data"><?php echo $borrowing_result["id"] ?></td>
                   <td class="lang row-data"><?php echo $users_result["fname"]. ' ' .$users_result["lname"] ?></td>
-                  <td class="subject row-data"><?php echo $book_result["title"] ?></td>
+                  <td class="subject row-data"><?php echo $books_result["title"] ?></td>
                   <td class="subject row-data"><?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?></td>
                   <td><button type="button" 
                     class="btn btn-danger">cancel</button></td>

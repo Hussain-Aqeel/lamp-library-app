@@ -19,7 +19,7 @@ require "auth_admin.php";
 
   <div class="container" style="min-height: 85vh;">
     <br>
-    <h1 class="mb-2 mt-4 d-flex justify-content-between">{{ Admin's name }}</h1>
+    <h1 class="mb-2 mt-4 d-flex justify-content-between"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname'] ?></h1>
 
     <br>
     <h1 class="mt-4 mb-3">List Of customers</h1>

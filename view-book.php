@@ -1,4 +1,6 @@
-<?php 
+<?php
+/** @var mysqli $link */
+
   session_start(); 
   include_once "connection.php";
 
