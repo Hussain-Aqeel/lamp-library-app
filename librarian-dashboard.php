@@ -7,33 +7,62 @@
   $sql_query = "SELECT * FROM book";
   $result = mysqli_query($link, $sql_query);
   $row = mysqli_fetch_array($result);
-  $last_id = 0;
 
-  while($row = $result->fetch_assoc()) {
-    $last_id = $row["id"];
-  }
-
-  $last_id++;
 
   // TODO: add a book to database
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // /** @var mysqli $link */
-      /** @var mysqli $link */
-    $title = mysqli_real_escape_string($link, $_POST['title']);
-    $genre = mysqli_real_escape_string($link, $_POST['genre']);
-    $author = mysqli_real_escape_string($link, $_POST['author']);
-    $genre = mysqli_real_escape_string($link, $_POST['genre']);
-    $authorPage = mysqli_real_escape_string($link, $_POST['author-page']);
-    $pic = mysqli_real_escape_string($link, $_POST['pic']);
+    $target_dir = "./assets/img/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+    // Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+      $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+      if($check !== false) {
+        echo "File is an image - " . $check["mime"] . ".";
+        $uploadOk = 1;
+      } else {
+        echo "File is not an image.";
+        $uploadOk = 0;
+      }
+    }
+
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+      echo "Sorry, your file was not uploaded.";
+    // if everything is ok, try to upload file
+    } else {
+      if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+        echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+      } else {
+        echo "Sorry, there was an error uploading your file.";
+      }
+    }
+
+  //   if (mysqli_query($conn, $sql)) {
+  //     echo "New record created successfully";
+  //   } else {
+  //     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+  //   }
+
+  //   // /** @var mysqli $link */
+  //     /** @var mysqli $link */
+  //   $title = mysqli_real_escape_string($link, $_POST['title']);
+  //   $genre = mysqli_real_escape_string($link, $_POST['genre']);
+  //   $author = mysqli_real_escape_string($link, $_POST['author']);
+  //   $genre = mysqli_real_escape_string($link, $_POST['genre']);
+  //   $authorPage = mysqli_real_escape_string($link, $_POST['author-page']);
+  //   $image_url = $target_dir . basename( $_FILES["fileToUpload"]["name"])
   
 
-    $sql_insert_query = 
-      "INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
-      ({$last_id}, '{$title}', {$author}, ${genre}, '{$pic}');";
+  //   $sql_insert_query =
+  //     "INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
+  //     ({$last_id}, '{$title}', {$author}, ${genre}, '{$image_url}');";
 
+  // }
   }
-  
 ?>
 
 <!DOCTYPE html>
@@ -167,7 +196,7 @@
         <div id="addBook" class="col-3">
 
         <h3 class="font-weight-bold">Add a new book</h3>
-        <form>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
             <div class="form-group">
               <label class="col-form-label col-form-label-sm" for="title">Title</label>
               <input class="form-control form-control-sm"
@@ -206,14 +235,14 @@
             <div class="form-group">
               <label class="col-form-label col-form-label-sm" for="pic">Choose a picture</label>
               <input class="form-control form-control-lg pb-4"
+                      name="fileToUpload" 
+                      id="fileToUpload"
                       required
-                      name="pic" 
                       type="file" 
                       accept="image/*"
-                      id="pic"
                       >
             </div>
-            <button type="submit" class="btn btn-dark d-block w-100">Add book</button>
+            <button type="submit" name="submit" class="btn btn-dark d-block w-100">Add book</button>
         </form>
       </div>
   </div>

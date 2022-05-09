@@ -106,9 +106,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <h1 class="text-center mb-3"><i class="fa fa-sign-in"></i> Login</h1>          
           <!-- TODO: add flash messages -->
             <?php
-            if(isset($_SESSION['error_login']))
+              if(isset($_SESSION['error_login']))
                 echo '<div class="alert alert-danger" role="alert">' .$_SESSION['error_login']. '</div>';
             ?>
+
+            <?php 
+            if(isset($_GET['success']))
+              echo '<div class="alert alert-success" role="alert">' ."You are now a member! sign in now.".'</div>';
+            ?>
+
           <div class="tab-content mt-3">
             <div class="tab-pane active" id="member" role="tabpanel">
               <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">

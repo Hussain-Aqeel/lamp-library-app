@@ -1,3 +1,62 @@
+<?php 
+
+session_start();
+
+// Include config file
+require_once "config.php";
+require_once "connection.php";
+ 
+// Define variables and initialize with empty values
+$firstName = $lastName = $email = $password = $password2 = "";
+$errors = array(); 
+
+// connect to the database
+// $db = mysqli_connect('localhost', 'root', '', 'registration');
+
+// REGISTER USER
+if (isset($_POST['reg_user'])) {
+  // receive all input values from the form
+  $fname = mysqli_real_escape_string($link, $_POST['firstName']);
+  $lname = mysqli_real_escape_string($link, $_POST['lastName']);
+  $email = mysqli_real_escape_string($link, $_POST['email']);
+  $password = mysqli_real_escape_string($link, $_POST['password']);
+  $password2 = mysqli_real_escape_string($link, $_POST['password2']);
+  $role = mysqli_real_escape_string($link, 3);
+  $status = mysqli_real_escape_string($link, 1);
+
+  // form validation: ensure that the form is correctly filled ...
+  // by adding (array_push()) corresponding error unto $errors array
+  if ($password != $password2) {
+	  array_push($errors, "passwords do not match");
+  }
+
+  // first check the database to make sure 
+  // a user does not already exist with the same username and/or email
+  $user_check_query = "SELECT * FROM user WHERE email='$email' LIMIT 1";
+  $result = mysqli_query($link, $user_check_query);
+  $user = mysqli_fetch_assoc($result);
+  
+  if ($user) { // if user exists
+    if ($user['email'] === $email) {
+      array_push($errors, "email already exists");
+    }
+  }
+
+  // Finally, register user if there are no errors in the form
+  if (count($errors) == 0) {
+
+    $query = "INSERT INTO user (role_id, status, email, password, fname, lname) 
+          VALUES('$role', '$status', '$email' ,'$password', '$fname', '$lname')";
+    
+    mysqli_query($link, $query);
+   
+    $_SERVER['success'] = "success";
+    header("location: login.php?". $_SERVER['success']);
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,13 +78,17 @@
         <h1 class="text-center mb-3">
           <i class="fas fa-user-plus"></i> Register
         </h1>
-        <form>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+
+        <?php include('errors.php'); ?>
+
           <div class="form-group">
             <label for="firstName">First Name</label>
             <input
               id="firstName"
               name="firstName"
               class="form-control"
+              required
             />
           </div>
           <div class="form-group">
@@ -34,6 +97,7 @@
               id="lastName"
               name="lastName"
               class="form-control"
+              required
             />
           </div>
           
@@ -44,6 +108,7 @@
               id="email"
               name="email"
               class="form-control"
+              required
               placeholder="example@example.com"
             />
           </div>
@@ -53,6 +118,7 @@
               type="password"
               id="password"
               name="password"
+              required
               class="form-control"
             />
           </div>
@@ -62,10 +128,11 @@
               type="password"
               id="password2"
               name="password2"
+              required
               class="form-control"
             />
           </div>
-          <button class="btn btn-primary btn-block">
+          <button type="submit" name="reg_user" class="btn btn-primary btn-block">
             Register
           </button>
         </form>
