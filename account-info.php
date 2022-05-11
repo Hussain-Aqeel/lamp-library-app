@@ -1,4 +1,30 @@
-<?php session_start() ?>
+<?php 
+
+session_start(); 
+
+// Include config file
+require_once "config.php";
+require_once "connection.php";
+ 
+// Define variables and initialize with empty values
+$password = $password2 = "";
+
+// Change user password
+if (isset($_POST['submit'])) {
+  // receive all input values from the form
+  $password = mysqli_real_escape_string($link, $_POST['password']);
+  $password2 = mysqli_real_escape_string($link, $_POST['password2']);
+
+  $user_id = $_SESSION['id'];
+
+  if ($password == $password2) {
+
+    $update_query = "UPDATE user SET password='$password' WHERE id='$user_id';";
+    mysqli_query($link, $update_query);
+  }  
+}
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +48,7 @@
     <hr>
 
     <div class="col-12 col-lg-6">
-        <form class="form-group">
+        <form class="form-group" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
           <label style="font-size: 2em;" for="name">Name:</label>
           <div id="nameArea" class="input-group input-group-lg">
             <input id="name" 
@@ -55,7 +81,7 @@
           <div id="passwordArea" class="input-group input-group-lg">
             <input id="password" 
                   name="password" 
-                  type="text" 
+                  type="password" 
                   class="form-control" 
                   value="*********" 
                   disabled
@@ -70,11 +96,12 @@
             <label style="font-size: 2em;" for="password">Confirm password:</label>
               <input id="password2" 
               name="password2" 
-              type="text" 
+              type="password" 
               class="form-control" 
               style="display: block; width: 100%;"
               >
             </div>
+            <button id="editBtn" name="submit" type="submit" class="btn btn-lg btn-dark w-50 mt-4 d-none">Edit Password</button>
           </div>
       </form>
     </div>
@@ -99,10 +126,8 @@
   <script>
     // needs some modifications
     editPassword = () => {
-      const btn = document.createElement("button");
-      btn.type = 'submit';
+      const btn = document.getElementById("editBtn");
       btn.classList = 'btn btn-lg btn-dark d-block w-50 mt-4';
-      btn.innerText = 'Edit';
       document.getElementById('passwordArea').appendChild(btn);
       document.getElementById('password').disabled = false;
       document.getElementById('password').value = '';

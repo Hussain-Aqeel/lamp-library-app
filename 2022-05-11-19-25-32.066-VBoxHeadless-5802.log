@@ -1,0 +1,12 @@
+Log created: 2022-05-11T19:25:32.665525000Z
+Process ID:  5802 (0x16aa)
+Parent PID:  2160 (0x870)
+Executable:  /usr/lib/virtualbox/VBoxHeadless
+Arg[0]: /usr/lib/virtualbox/VBoxHeadless
+Arg[1]: --comment
+Arg[2]: vagrant-lamp2_default_1652221951349_93078
+Arg[3]: --startvm
+Arg[4]: 07c8f10c-ee60-47b9-a190-af6c6c89965a
+Arg[5]: --vrde
+Arg[6]: config
+AddRef: illegal refcnt=3221225469 state=2

@@ -3,11 +3,6 @@
   require_once "connection.php";
   require_once 'auth_lib.php';
 
-  $sql_query = "SELECT * FROM book";
-  $result = mysqli_query($link, $sql_query);
-  $row = mysqli_fetch_array($result);
-
-
   // TODO: add a book to database
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -89,6 +84,15 @@
 
   <br>
   <br>
+  <?php
+  if(isset($_GET['addBook']))
+    echo '<div id="msg" class="alert alert-success" role="alert">' ."You just added a new book!".'</div>';
+  if(isset($_GET['cancelledBorrow']))
+    echo '<div id="msg" class="alert alert-danger" role="alert">' ."You just deleted a borrow".'</div>';
+  if(isset($_GET['deletedBook']))
+    echo '<div id="msg" class="alert alert-danger" role="alert">' ."You just deleted a book".'</div>';
+  ?>
+  
   <div class="row">
       <div class="col-9">
       <h1 class="mt-4 mb-3">List of Books</h1>
@@ -103,8 +107,6 @@
               <th scope="col">genre</th>
               <th scope="col">author</th>
               <th scope="col"> </th>
-              <th scope="col"> </th>
-              <th scope="col"> </th>
             </tr>
           </thead>
           <tbody class="items">
@@ -113,7 +115,6 @@
 
           $sql_query = "SELECT * FROM book";
           $result = mysqli_query($link, $sql_query);
-          $row = mysqli_fetch_array($result);
           
           if ($result->num_rows > 0) {
         
@@ -132,15 +133,10 @@
                 <td class="row-data">
                 <?php echo htmlspecialchars($row["id"]); ?>
                 </td>
-                <td class="title row-data"><?php echo $row["title"] ?></td>
+                <td class="row-data" id="title"><?php echo $row["title"] ?></td>
                 <td class="row-data"><?php echo $genre_name["name"] ?></td>
                 <td class="row-data"><?php echo $author_name["name"] ?></td>
-                <td><button type="button" 
-                  class="btn btn-dark"
-                  data-toggle="modal" 
-                  data-target="#edit-modal">Edit</button></td>
-
-                <td><button type="button" class="btnDelete btn btn-danger">Delete</button></td>
+                <td><button id="deleteBtn" type="button" class="btnDelete btn btn-danger">Delete</button></td>
               </tr>
             <?php } ?>
           <?php } ?>
@@ -166,8 +162,6 @@
           <?php 
             $borrowing_query = "SELECT * FROM borrowing";
             $borrowing_query_result = mysqli_query($link, $borrowing_query);
-            $borrowing_result = mysqli_fetch_array($borrowing_query_result);
-
 
             if ($borrowing_query_result->num_rows > 0) {
               
@@ -198,7 +192,7 @@
         <div id="addBook" class="col-3">
 
         <h3 class="font-weight-bold">Add a new book</h3>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] .'?addBook'); ?>" method="POST" enctype="multipart/form-data">
             <div class="form-group">
               <label class="col-form-label" for="title">Title</label>
               <input class="form-control form-control-sm"
@@ -214,8 +208,6 @@
                 <?php 
                   $genre_query = "SELECT * FROM genre";
                   $genre_query_result = mysqli_query($link, $genre_query);
-                  $genre_result = mysqli_fetch_array($genre_query_result);
-
 
                   if ($genre_query_result->num_rows > 0) {
                     
@@ -235,8 +227,6 @@
                 <?php 
                   $author_query = "SELECT * FROM author";
                   $author_query_result = mysqli_query($link, $author_query);
-                  $author_result = mysqli_fetch_array($author_query_result);
-
 
                   if ($author_query_result->num_rows > 0) {
                     
@@ -333,6 +323,16 @@
       });
     });
 
+</script>
+<script>
+  function editName() {
+    document.getElementById('title').disabled = false;
+    document.getElementById("myText").disabled = true;
+  }
+
+  setTimeout(function(){
+    document.getElementById('msg').style.display = 'none';
+    }, 8000);
 </script>
 </body>
 </html>

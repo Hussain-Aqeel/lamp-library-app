@@ -1,8 +1,31 @@
 <?php 
-  session_start(); 
+  session_start();
+  include_once "config.php"; 
   include_once "connection.php";
 
+  $user_id = $_SESSION['id'];
+  echo $user_id;
+
   $book_id = $_GET['id'];
+  echo $book_id;
+
+  if (isset($_POST['addComment'])) {
+    
+    $comment = $_POST['textArea'];
+    
+    $comment_query = "INSERT INTO comment (id, user_id, book_id, comment_text, date) VALUES
+    (default, $user_id, $book_id, '$comment', now());";
+    mysqli_query($link, $comment_query);
+  }
+
+  if (isset($_POST['borrow'])) {
+    $borrowing_query = "INSERT INTO borrowing (id, user_id, book_id, date) VALUES
+    (default, $user_id, $book_id, now());";
+
+    mysqli_query($link, $borrowing_query);
+    header('Location: customer-dashboard.php?success=true');
+  }
+
   $sql_query = "SELECT * FROM book WHERE id='{$book_id}'";
   $result = mysqli_query($link, $sql_query);
   $row = mysqli_fetch_array($result);
@@ -15,7 +38,6 @@
   $genre_name_query = "SELECT * FROM genre WHERE id='{$row["genre_id"]}'";
   $genre_name_result = mysqli_query($link, $genre_name_query);
   $genre_name = mysqli_fetch_array($genre_name_result);
-
 ?>
 
 <!DOCTYPE html>
@@ -54,7 +76,9 @@
         <span class="badge bg-secondary text-white p-2"><?php echo $genre_name["name"] ?></span>
         <p class="mt-5">Read about the author</p>
         <a class="text-primary mt-0" target="_blank" href="<?php echo htmlspecialchars($author_name["wiki_page"]); ?>"><?php echo $author_name["name"]?></a>
-        <button type="submit" class="btn btn-lg btn-dark d-block w-50 mt-4">Borrow Now</button>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]. "?id=" .$_GET['id']); ?>" method="POST">
+          <button type="submit" name="borrow" class="btn btn-lg btn-dark d-block w-50 mt-4">Borrow Now</button>
+        </form>
       </div>
 
   </div>
@@ -85,15 +109,28 @@
       <?php } ?>
 
       <h5 class="mt-5">Add comment</h5>
-      <form style="width: 89%;">
-        <textarea style="width: 100%; height: 8em;" name="" id="textArea"></textarea>
-        <div class="my-4 d-flex justify-content-end">
+      <form 
+        action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]. "?id=" .$_GET['id']); ?>" 
+        method="POST" 
+        id="addCommentForm"
+        class="form-group" 
+        style="width: 89%;">
+        <div id="nameArea" class="input-group input-group-lg">
+          <textarea 
+            class="form-control" 
+            style="width: 100%; height: 8em;" 
+            name="textArea" 
+            id="textArea">
+          </textarea>
+        </div>
+      
+        <div class="my-4 d-flex justify-content-end input-group input-group-lg">
           <button id="clear" type="button" class="btn btn-lg btn-danger">Clear</button>
-          <button type="button" class="ml-3 btn btn-lg btn-primary">Submit</button>
+          <button type="submit" name="addComment" class="ml-3 btn btn-lg btn-primary">Submit</button>
         </div>
         
-      </form>
-    </div>
+    </form>
+  </div>
     
   </div>
   
