@@ -40,27 +40,28 @@
       }
     }
 
-  //   if (mysqli_query($conn, $sql)) {
-  //     echo "New record created successfully";
-  //   } else {
-  //     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-  //   }
-
-  //   // /** @var mysqli $link */
-  //     /** @var mysqli $link */
-  //   $title = mysqli_real_escape_string($link, $_POST['title']);
-  //   $genre = mysqli_real_escape_string($link, $_POST['genre']);
-  //   $author = mysqli_real_escape_string($link, $_POST['author']);
-  //   $genre = mysqli_real_escape_string($link, $_POST['genre']);
-  //   $authorPage = mysqli_real_escape_string($link, $_POST['author-page']);
-  //   $image_url = $target_dir . basename( $_FILES["fileToUpload"]["name"])
+    $title = mysqli_real_escape_string($link, $_POST['title']);
+    $genre = mysqli_real_escape_string($link, $_POST['genre']);
+    $author = mysqli_real_escape_string($link, $_POST['author']);
+    $description = mysqli_real_escape_string($link, $_POST['description']);
+    $image_url = $target_dir . basename( $_FILES["fileToUpload"]["name"]);
   
+    $genre_query = "SELECT * FROM genre WHERE name='$genre'";
+    $genre_result = mysqli_query($link, $genre_query);
+    $genre_row = mysqli_fetch_array($genre_result);
 
-  //   $sql_insert_query =
-  //     "INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
-  //     ({$last_id}, '{$title}', {$author}, ${genre}, '{$image_url}');";
+    $author_query = "SELECT * FROM author WHERE name='$author'";
+    $author_result = mysqli_query($link, $author_query);
+    $author_row = mysqli_fetch_array($author_result);
 
-  // }
+    $author = $author_row['id'];
+    $genre = $genre_row['id'];
+
+    $sql_insert_query =
+      "INSERT INTO `book` (`id`, `title`, `author_id`, `genre_id`, `image_url`, `description`) VALUES
+      (default, '$title', $author, $genre, '$image_url', '$description');";
+
+    mysqli_query($link, $sql_insert_query);
   }
 ?>
 
@@ -91,8 +92,10 @@
   <div class="row">
       <div class="col-9">
       <h1 class="mt-4 mb-3">List of Books</h1>
-        <!--  -->
-        <table class="table table-hover" id="table">
+        
+      <form>
+      <!--  -->
+        <table id="booksTable" class="table table-hover">
           <thead>
             <tr class="header">
               <th scope="col">ID</th>
@@ -125,31 +128,31 @@
               $genre_name_result = mysqli_query($link, $genre_name_query);
               $genre_name = mysqli_fetch_array($genre_name_result);
               ?>
-              <tr class="table-light" id="<?php echo htmlspecialchars($row["id"]); ?>">
-                <td class="isbn row-data"><?php echo $row["id"] ?></td>
+              <tr class="table-light">
+                <td class="row-data">
+                <?php echo htmlspecialchars($row["id"]); ?>
+                </td>
                 <td class="title row-data"><?php echo $row["title"] ?></td>
-                <td class="lang row-data"><?php echo $genre_name["name"] ?></td>
-                <td class="subject row-data"><?php echo $author_name["name"] ?></td>
+                <td class="row-data"><?php echo $genre_name["name"] ?></td>
+                <td class="row-data"><?php echo $author_name["name"] ?></td>
                 <td><button type="button" 
                   class="btn btn-dark"
                   data-toggle="modal" 
                   data-target="#edit-modal">Edit</button></td>
-                <td><button type="button" 
-                  class="btn btn-danger" 
-                  data-toggle="modal" 
-                  data-target="#delete-modal">Delete</button></td>
+
+                <td><button type="button" class="btnDelete btn btn-danger">Delete</button></td>
               </tr>
             <?php } ?>
           <?php } ?>
           </tbody>
         </table>
-
+      </form>
 
         <br>
         <br>
         <h1 class="mb-3 mt-4">Borrows</h1>  
 
-        <table class="table table-hover" id="table2">
+        <table class="table table-hover" id="borrowTable">
           <thead>
             <tr class="header">
               <th scope="col">id</th>
@@ -179,12 +182,12 @@
                 $users_result = mysqli_fetch_array($users_query_result);
           ?>
                 <tr class="table-light" id="">
-                  <td class="title row-data"><?php echo $borrowing_result["id"] ?></td>
+                  <td class="title row-data" id="<?php echo $borrowing_result["id"] ?>"><?php echo $borrowing_result["id"] ?></td>
                   <td class="lang row-data"><?php echo $users_result["fname"]. ' ' .$users_result["lname"] ?></td>
                   <td class="subject row-data"><?php echo $book_result["title"] ?></td>
                   <td class="subject row-data"><?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?></td>
                   <td><button type="button" 
-                    class="btn btn-danger">cancel</button></td>
+                    class="btnCancel btn btn-danger">cancel</button></td>
                 </tr>
             <?php } ?>
           <?php } ?>
@@ -197,7 +200,7 @@
         <h3 class="font-weight-bold">Add a new book</h3>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-              <label class="col-form-label col-form-label-sm" for="title">Title</label>
+              <label class="col-form-label" for="title">Title</label>
               <input class="form-control form-control-sm"
                       required
                       name="title" 
@@ -206,34 +209,56 @@
                       >
             </div>
             <div class="form-group">
-              <label class="col-form-label col-form-label-sm" for="genre">Genre</label>
-              <input class="form-control form-control-sm"
-                      required 
-                      name="genre" 
-                      type="text" 
-                      id="genre"
-                      >
+              <label for="select" class="form-label mt-4">Genre</label>
+              <select class="form-select form-control form-control-sm" name="genre">
+                <?php 
+                  $genre_query = "SELECT * FROM genre";
+                  $genre_query_result = mysqli_query($link, $genre_query);
+                  $genre_result = mysqli_fetch_array($genre_query_result);
+
+
+                  if ($genre_query_result->num_rows > 0) {
+                    
+                    while($genre_result = $genre_query_result->fetch_assoc()) {
+                ?>
+                <option id="<?php echo $genre_result["id"] ?>">
+                  <?php echo $genre_result["name"] ?>
+                </option>
+                <?php } ?>
+              <?php } ?>
+              </select>
             </div>
+
             <div class="form-group">
-              <label class="col-form-label col-form-label-sm" for="author">Author</label>
-              <input class="form-control form-control-sm"
-                      required 
-                      name="author" 
-                      type="text" 
-                      id="author"
-                      >
+              <label for="select" class="form-label mt-4">Author</label>
+              <select class="form-select form-control form-control-sm" name="author">
+                <?php 
+                  $author_query = "SELECT * FROM author";
+                  $author_query_result = mysqli_query($link, $author_query);
+                  $author_result = mysqli_fetch_array($author_query_result);
+
+
+                  if ($author_query_result->num_rows > 0) {
+                    
+                    while($author_result = $author_query_result->fetch_assoc()) {
+                ?>
+                <option id="<?php echo $author_result["id"] ?>">
+                  <?php echo $author_result["name"] ?>
+                </option>
+                <?php } ?>
+              <?php } ?>
+              </select>
             </div>
+
             <div class="form-group">
-              <label class="col-form-label col-form-label-sm" for="author-page">Author's wiki page</label>
-              <input class="form-control form-control-sm" 
-                      name="author-page" 
-                      type="text" 
-                      id="author-page"
-                      >
+              <label for="exampleTextarea" class="form-label mt-4">Description</label>
+              <textarea class="form-control" name="description" rows="3"></textarea>
             </div>
+            
             <div class="form-group">
-              <label class="col-form-label col-form-label-sm" for="pic">Choose a picture</label>
-              <input class="form-control form-control-lg pb-4"
+              <label class="col-form-label" for="pic">Choose a picture</label>
+              <input class="form-control form-control"
+                      style="min-height: 4em;"
                       name="fileToUpload" 
                       id="fileToUpload"
                       required
@@ -241,18 +266,18 @@
                       accept="image/*"
                       >
             </div>
-            <button type="submit" name="submit" class="btn btn-dark d-block w-100">Add book</button>
+            <button type="submit" id="addBookBtn" name="submit" class="btn btn-dark d-block w-100">Add book</button>
         </form>
       </div>
   </div>
-
-
+  
 </div>
 
 <?php include('footer.php') ?>
 
 <!-- bootstrap javascript files-->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
@@ -263,6 +288,51 @@
         e.preventDefault()
         $(this).tab('show')
     });
+
+
+    // this is for deleting a book
+    $(document).ready(function(){
+      // code to read selected table row cell data (values).
+      $("#booksTable").on('click','.btnDelete',function(){
+          // get the current row
+          var currentRow = $(this).closest("tr"); 
+          
+          var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+          
+          $.ajax({
+           type: "POST",
+           url: "delete-book.php",
+           data: { rowId: col1 },
+           success: function(d){     
+                //show a status message
+                console.log("book is deleted");     
+           }
+         });
+      });
+    });
+
+    
+    // this is for deleting a book
+    $(document).ready(function(){
+      // code to read selected table row cell data (values).
+      $("#borrowTable").on('click','.btnCancel',function(){
+          // get the current row
+          var currentRow = $(this).closest("tr"); 
+          
+          var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+          
+          $.ajax({
+           type: "POST",
+           url: "cancel-borrow.php",
+           data: { rowId: col1 },
+           success: function(d){     
+                //show a status message
+                console.log("book is deleted");     
+           }
+         });
+      });
+    });
+
 </script>
 </body>
 </html>
