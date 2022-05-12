@@ -69,6 +69,27 @@ if (isset($_POST['addAuthor'])) {
   mysqli_query($link, $sql);
 }
 
+if (isset($_POST['addGenre'])) {
+  $genreName = $_POST['genreName'];
+
+  $sql = "INSERT INTO genre (id, name) VALUES
+  (default, '$genreName');";
+
+  mysqli_query($link, $sql);
+}
+
+if (isset($_POST['addLibrarian'])) {
+  $fname = $_POST['fname'];
+  $lname = $_POST['lname'];
+  $email = $_POST['email'];
+  $tmpPassword = $_POST['tmpPassword'];
+
+  $sql = "INSERT INTO user (id, role_id, status, email, password, fname, lname) VALUES
+  (default, 2, 1, '$email', '$tmpPassword', '$fname', '$lname');";
+
+  mysqli_query($link, $sql);
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -100,6 +121,10 @@ if (isset($_POST['addAuthor'])) {
       echo '<div id="msg" class="alert alert-danger" role="alert">' ."You just deleted a book".'</div>';
     if(isset($_GET['addedAuthor']))
       echo '<div id="msg" class="alert alert-success" role="alert">' ."You just added a new author".'</div>';
+    if(isset($_GET['addedGenre']))
+      echo '<div id="msg" class="alert alert-success" role="alert">' ."You just added a new genre".'</div>';
+    if(isset($_GET['addedLibrarian']))
+      echo '<div id="msg" class="alert alert-success" role="alert">' ."You just added a new librarian".'</div>';
     ?>
 
     <br>
@@ -265,7 +290,7 @@ if (isset($_POST['addAuthor'])) {
                 <tr class="table-light" id="">
                   <td class="title row-data" id="<?php echo $borrowing_result["id"] ?>"><?php echo $borrowing_result["id"] ?></td>
                   <td class="lang row-data"><?php echo $users_result["fname"]. ' ' .$users_result["lname"] ?></td>
-                  <td class="subject row-data"><?php echo $book_result["title"] ?></td>
+                  <td class="subject row-data"><?php echo $books_result["title"] ?></td>
                   <td class="subject row-data"><?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?></td>
                   <td><button type="button" 
                     class="btnCancel btn btn-danger">cancel</button></td>
@@ -374,7 +399,7 @@ if (isset($_POST['addAuthor'])) {
 
       <br>
         <h3 class="font-weight-bold mt-3">Add a new Genre</h3>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . '?addedGenre'); ?>" method="POST">
             <div class="form-group">
               <label class="col-form-label" for="genreName">Name</label>
               <input class="form-control"
@@ -389,7 +414,7 @@ if (isset($_POST['addAuthor'])) {
 
         <br>
         <h3 class="font-weight-bold mt-3">Add a new Librarian</h3>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . '?addedLibrarian'); ?>" method="POST">
             <div class="form-group">
               <label class="col-form-label" for="fname">First Name</label>
               <input class="form-control"
@@ -426,7 +451,7 @@ if (isset($_POST['addAuthor'])) {
                       id="tmpPassword"
                       >
             </div>
-            <button type="submit" name="addGenre" class="btn btn-dark d-block w-100">Add Librarian</button>
+            <button type="submit" name="addLibrarian" class="btn btn-dark d-block w-100">Add Librarian</button>
         </form>
       
       </div>
