@@ -107,12 +107,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <!-- TODO: add flash messages -->
             <?php
               if(isset($_SESSION['error_login']))
-                echo '<div class="alert alert-danger" role="alert">' .$_SESSION['error_login']. '</div>';
+                echo '<div id="msg" class="alert alert-danger" role="alert">' .$_SESSION['error_login']. '</div>';
             ?>
 
             <?php 
             if(isset($_GET['success']))
-              echo '<div class="alert alert-success" role="alert">' ."You are now a member! sign in now.".'</div>';
+              echo '<div id="msg" class="alert alert-success" role="alert">' ."You are now a member! sign in now.".'</div>';
             ?>
 
           <div class="tab-content mt-3">
@@ -154,5 +154,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
+    <script>
+      setTimeout(function(){
+        document.getElementById('msg').style.display = 'none';
+        }, 8000);
+    </script>
 </body>
 </html>

@@ -30,12 +30,13 @@
   <?php 
   $borrowing_query = "SELECT * FROM borrowing WHERE user_id='{$_SESSION["id"]}'";
   $borrowing_query_result = mysqli_query($link, $borrowing_query);
-  $borrowing_result = mysqli_fetch_array($borrowing_query_result);
-
 ?>
 
   <h1 class="mb-4 ml-4">Borrows</h1>  
-
+  <?php 
+  if(isset($_GET['success']))
+    echo '<div id="msg" class="alert alert-success" role="alert">' ."You just borrowed a new book!".'</div>';
+  ?>
       <table class="table table-hover" id="table2">
         <thead>
           <tr class="header">
@@ -56,14 +57,25 @@
             $books_query = "SELECT * FROM book WHERE id='{$borrowing_result["book_id"]}'";
             $books_query_result = mysqli_query($link, $books_query);
             $books_result = mysqli_fetch_array($books_query_result);
+
+            $genre_query = "SELECT * FROM genre WHERE id='{$books_result["genre_id"]}'";
+            $genre_result = mysqli_query($link, $genre_query);
+            $genre_row = mysqli_fetch_array($genre_result);
+        
+            $author_query = "SELECT * FROM author WHERE id='{$books_result["author_id"]}'";
+            $author_result = mysqli_query($link, $author_query);
+            $author_row = mysqli_fetch_array($author_result);
+        
+            $author = $author_row['name'];
+            $genre = $genre_row['name'];  
             
           ?>
 
           <tr class="table-light">
             <td class="row-data"> <?php echo $books_result["id"] ?> </td>
             <td class="row-data"> <?php echo $books_result["title"] ?> </td>
-            <td class="row-data"> <?php echo $books_result["author_id"] ?> </td>
-            <td class="row-data"> <?php echo $books_result["genre_id"] ?> </td>
+            <td class="row-data"> <?php echo $author ?> </td>
+            <td class="row-data"> <?php echo $genre ?> </td>
             <td class="row-data"> <?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?> </td>
           </tr>
 
@@ -87,6 +99,11 @@
         e.preventDefault()
         $(this).tab('show')
     });
+</script>
+<script>
+  setTimeout(function(){
+    document.getElementById('msg').style.display = 'none';
+    }, 8000);
 </script>
 </body>
 </html>

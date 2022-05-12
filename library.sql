@@ -315,7 +315,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `author`
 --
 ALTER TABLE `author`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `book`
@@ -367,28 +367,28 @@ ALTER TABLE `user`
 -- Constraints for table `book`
 --
 ALTER TABLE `book`
-  ADD CONSTRAINT `FK_1a7c20a2-2127-4b36-bfca-0a5505a02a13` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`),
-  ADD CONSTRAINT `FK_24d227f3-2132-4aa7-813a-97f59cb97b79` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`);
+  ADD CONSTRAINT `FK_1a7c20a2-2127-4b36-bfca-0a5505a02a13` FOREIGN KEY (`author_id`) REFERENCES `author` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_24d227f3-2132-4aa7-813a-97f59cb97b79` FOREIGN KEY (`genre_id`) REFERENCES `genre` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `borrowing`
 --
 ALTER TABLE `borrowing`
-  ADD CONSTRAINT `FK_4baf9999-98ad-41ad-814b-986378ce74d0` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`),
-  ADD CONSTRAINT `FK_8fa0e8f3-d73b-4169-89ed-239dba288c48` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_4baf9999-98ad-41ad-814b-986378ce74d0` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_8fa0e8f3-d73b-4169-89ed-239dba288c48` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `comment`
 --
 ALTER TABLE `comment`
-  ADD CONSTRAINT `FK_b46d944a-a31f-4e8f-bb79-81651c11cae0` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`),
-  ADD CONSTRAINT `FK_f15a4d7a-ab8e-4856-8578-05aa8a1e91c7` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_b46d944a-a31f-4e8f-bb79-81651c11cae0` FOREIGN KEY (`book_id`) REFERENCES `book` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_f15a4d7a-ab8e-4856-8578-05aa8a1e91c7` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `user`
 --
 ALTER TABLE `user`
-  ADD CONSTRAINT `FK_55520b4c-6a94-489e-b01a-dc7cd722e3b2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`);
+  ADD CONSTRAINT `FK_55520b4c-6a94-489e-b01a-dc7cd722e3b2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -32,7 +32,6 @@
 
     $sql_query = "SELECT * FROM book";
       $result = mysqli_query($link, $sql_query);
-      $row = mysqli_fetch_array($result);
 
       if ($result->num_rows > 0) {
         
