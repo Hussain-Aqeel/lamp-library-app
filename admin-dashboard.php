@@ -110,7 +110,8 @@ if (isset($_POST['addLibrarian'])) {
 
   <div class="container" style="min-height: 85vh;">
     <br>
-    <h1 class="mb-2 mt-4 d-flex justify-content-between"><?php $_SESSION['name'] ?></h1>
+
+    <h1 class="mb-2 mt-4 d-flex justify-content-between"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname'] ?></h1>
 
     <?php
     if(isset($_GET['addBook']))
@@ -126,6 +127,8 @@ if (isset($_POST['addLibrarian'])) {
     if(isset($_GET['addedLibrarian']))
       echo '<div id="msg" class="alert alert-success" role="alert">' ."You just added a new librarian".'</div>';
     ?>
+
+    
 
     <br>
     <h1 class="mt-4 mb-3">List Of customers</h1>

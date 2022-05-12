@@ -27,9 +27,10 @@
     <br>
     <div id="content" style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 1.5em;">
     <!-- the cards will be loaded here by the js code -->
-    <?php 
-      
-      $sql_query = "SELECT * FROM book";
+    <?php
+    /** @var mysqli $link */
+
+    $sql_query = "SELECT * FROM book";
       $result = mysqli_query($link, $sql_query);
 
       if ($result->num_rows > 0) {
