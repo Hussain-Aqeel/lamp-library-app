@@ -136,7 +136,7 @@ if (isset($_POST['addLibrarian'])) {
     <div class="row">
       <div class="mb-5 col-9">
         <!-- customers table -->
-        <table class="table table-hover" id="table">
+        <table id="customerTable" class="table table-hover" id="table">
           <thead>
             <tr class="header">
               <th scope="col">ID</th>
@@ -175,7 +175,7 @@ if (isset($_POST['addLibrarian'])) {
         <br>
         <h1 class="mt-4 mb-3">List of librarians</h1>
         <!-- librarians table -->
-        <table class="table table-hover" id="table">
+        <table id="librarianTable" class="table table-hover" id="table">
           <thead>
             <tr class="header">
               <th scope="col">ID</th>
@@ -468,6 +468,7 @@ if (isset($_POST['addLibrarian'])) {
 
   <!-- bootstrap javascript files-->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
@@ -477,6 +478,95 @@ if (isset($_POST['addLibrarian'])) {
       $('#users-list a').on('click', function (e) {
           e.preventDefault()
           $(this).tab('show')
+      });
+
+      // this is for deleting a customer
+      $(document).ready(function(){
+        // code to read selected table row cell data (values).
+        $("#customerTable").on('click','.btnDeleteCustomer',function(){
+            // get the current row
+            var currentRow = $(this).closest("tr"); 
+            
+            var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+            
+            $.ajax({
+            type: "POST",
+            url: "delete-user.php",
+            data: { rowId: col1 },
+            success: function(d){     
+                  //show a status message
+                  console.log("customer is deleted");     
+            }
+          });
+        });
+      });
+
+      // this is for deleting a librarian
+      $(document).ready(function(){
+        // code to read selected table row cell data (values).
+        $("#librarianTable").on('click','.btnDeleteLibrarian',function(){
+            // get the current row
+            var currentRow = $(this).closest("tr"); 
+            
+            var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+            
+            $.ajax({
+            type: "POST",
+            url: "delete-user.php",
+            data: { rowId: col1 },
+            success: function(d){     
+                  //show a status message
+                  console.log("librarian is deleted");     
+            }
+          });
+        });
+      });
+
+      // this is for deleting a book
+    $(document).ready(function(){
+      // code to read selected table row cell data (values).
+      $("#booksTable").on('click','.btnDelete',function(){
+          // get the current row
+          var currentRow = $(this).closest("tr"); 
+          
+          var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+          
+          $.ajax({
+           type: "POST",
+           url: "delete-book.php",
+           data: { rowId: col1 },
+           success: function(d){     
+                //show a status message
+                console.log("book is deleted");     
+           }
+         });
+      });
+    });
+
+    
+    // this is for cancelling a borrow
+    $(document).ready(function(){
+      // code to read selected table row cell data (values).
+      $("#borrowTable").on('click','.btnCancel',function(){
+          // get the current row
+          var currentRow = $(this).closest("tr"); 
+          
+          var col1 = currentRow.find("td:eq(0)").text(); // get current row 1st TD value
+          
+          $.ajax({
+           type: "POST",
+           url: "cancel-borrow.php",
+           data: { rowId: col1 },
+           success: function(d){     
+                //show a status message
+                console.log("book is deleted");     
+           }
+         });
+      });
+    });
+
+      $(document).ajaxStop(function(){
+          window.location.reload();
       });
   </script>
   <script>

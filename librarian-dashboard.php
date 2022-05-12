@@ -324,6 +324,10 @@
       });
     });
 
+    $(document).ajaxStop(function(){
+    window.location.reload();
+    });
+
 </script>
 <script>
   function editName() {
