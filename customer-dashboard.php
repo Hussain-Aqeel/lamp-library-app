@@ -1,7 +1,9 @@
 <?php
   session_start();
   include_once('connection.php');
-  require_once 'customer_auth.php'; ?>
+  require_once 'auth_customer.php'; 
+  
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +21,6 @@
 
 <?php include('nav.php') ?>
 
-
 <div class="container mb-5" style="min-height: 79vh;">
   <h1 class="my-4 d-flex justify-content-between">
     <?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?>
@@ -30,59 +31,65 @@
   <?php 
   $borrowing_query = "SELECT * FROM borrowing WHERE user_id='{$_SESSION["id"]}'";
   $borrowing_query_result = mysqli_query($link, $borrowing_query);
-?>
+  ?>
 
   <h1 class="mb-4 ml-4">Borrows</h1>  
   <?php 
   if(isset($_GET['success']))
     echo '<div id="msg" class="alert alert-success" role="alert">' ."You just borrowed a new book!".'</div>';
   ?>
-      <table class="table table-hover" id="table2">
-        <thead>
-          <tr class="header">
-            <th scope="col">ID</th>
-            <th scope="col">Title</th>
-            <th scope="col">Author</th>
-            <th scope="col">Genre</th>
-            <th scope="col">Date</th>
-          </tr>
-        </thead>
-        <tbody class="items">
+
+  <!-- 
+    ◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼
+    ◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼ Borrows Table ◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼
+    ◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼◼
+    -->
+  <table class="table table-hover" id="table2">
+    <thead>
+      <tr class="header">
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">Author</th>
+        <th scope="col">Genre</th>
+        <th scope="col">Date</th>
+      </tr>
+    </thead>
+    <tbody class="items">
+    
+      <?php 
+      if ($borrowing_query_result->num_rows > 0) {
         
-        <?php 
-        if ($borrowing_query_result->num_rows > 0) {
+        while($borrowing_result = $borrowing_query_result->fetch_assoc()) {
+
+          $books_query = "SELECT * FROM book WHERE id='{$borrowing_result["book_id"]}'";
+          $books_query_result = mysqli_query($link, $books_query);
+          $books_result = mysqli_fetch_array($books_query_result);
+
+          $genre_query = "SELECT * FROM genre WHERE id='{$books_result["genre_id"]}'";
+          $genre_result = mysqli_query($link, $genre_query);
+          $genre_row = mysqli_fetch_array($genre_result);
+      
+          $author_query = "SELECT * FROM author WHERE id='{$books_result["author_id"]}'";
+          $author_result = mysqli_query($link, $author_query);
+          $author_row = mysqli_fetch_array($author_result);
+      
+          $author = $author_row['name'];
+          $genre = $genre_row['name'];  
           
-          while($borrowing_result = $borrowing_query_result->fetch_assoc()) {
+        ?>
 
-            $books_query = "SELECT * FROM book WHERE id='{$borrowing_result["book_id"]}'";
-            $books_query_result = mysqli_query($link, $books_query);
-            $books_result = mysqli_fetch_array($books_query_result);
+        <tr class="table-light">
+          <td class="row-data"> <?php echo $books_result["id"] ?> </td>
+          <td class="row-data"> <?php echo $books_result["title"] ?> </td>
+          <td class="row-data"> <?php echo $author ?> </td>
+          <td class="row-data"> <?php echo $genre ?> </td>
+          <td class="row-data"> <?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?> </td>
+        </tr>
 
-            $genre_query = "SELECT * FROM genre WHERE id='{$books_result["genre_id"]}'";
-            $genre_result = mysqli_query($link, $genre_query);
-            $genre_row = mysqli_fetch_array($genre_result);
-        
-            $author_query = "SELECT * FROM author WHERE id='{$books_result["author_id"]}'";
-            $author_result = mysqli_query($link, $author_query);
-            $author_row = mysqli_fetch_array($author_result);
-        
-            $author = $author_row['name'];
-            $genre = $genre_row['name'];  
-            
-          ?>
-
-          <tr class="table-light">
-            <td class="row-data"> <?php echo $books_result["id"] ?> </td>
-            <td class="row-data"> <?php echo $books_result["title"] ?> </td>
-            <td class="row-data"> <?php echo $author ?> </td>
-            <td class="row-data"> <?php echo $genre ?> </td>
-            <td class="row-data"> <?php echo date('Y-m-d', strtotime($borrowing_result["date"])) ?> </td>
-          </tr>
-
-        <?php } ?>
       <?php } ?>
-        </tbody>
-      </table>
+    <?php } ?>
+    </tbody>
+  </table>
 </div>
 
 <?php include('footer.php'); ?>
@@ -94,11 +101,20 @@
 <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
 <!-- this jquery for the hamburger menu -->
 <script>
-    $('.dropdown-toggle').dropdown();
-    $('#users-list a').on('click', function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    });
+  $('.dropdown-toggle').dropdown();
+  $('#users-list a').on('click', function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+  });
+
+  // this is to clear query params after refresh
+  $(document).ready(function(){
+    var uri = window.location.toString();
+    if (uri.indexOf("?") > 0) {
+      var clean_uri = uri.substring(0, uri.indexOf("?"));
+      window.history.replaceState({}, document.title, clean_uri);
+    }
+  });
 </script>
 <script>
   setTimeout(function(){

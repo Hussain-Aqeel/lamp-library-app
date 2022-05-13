@@ -2,6 +2,7 @@
   session_start(); 
   include_once "config.php"; 
   include_once "connection.php";
+  include_once "auth_customer.php";
 
   $user_id = $_SESSION['id'];
   echo $user_id;
@@ -10,12 +11,22 @@
   echo $book_id;
 
   if (isset($_POST['addComment'])) {
-    
-    $comment = $_POST['textArea'];
-    
-    $comment_query = "INSERT INTO comment (id, user_id, book_id, comment_text, date) VALUES
-    (default, $user_id, $book_id, '$comment', now());";
-    mysqli_query($link, $comment_query);
+
+    // prepare an insert statement
+    $insert_comment_sql = "INSERT INTO comment (id, user_id, book_id, comment_text, date) VALUES
+    (default, ?, ?, ?, now());";
+
+    if($stmt = mysqli_prepare($link, $insert_comment_sql)){
+
+      // Bind variables to the prepared statement as parameters
+      mysqli_stmt_bind_param($stmt, "sss", $user_id, $book_id, $comment);
+      
+      $comment = $_POST['textArea'];
+      
+      if(mysqli_stmt_execute($stmt)) {
+        $successfulQuery = true;
+      }
+    }
   }
 
   if (isset($_POST['borrow'])) {
@@ -144,11 +155,20 @@
   <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
   <!-- this jquery for the hamburger menu -->
   <script>
-      $('.dropdown-toggle').dropdown();
-      $('#users-list a').on('click', function (e) {
-          e.preventDefault()
-          $(this).tab('show')
-      });
+    $('.dropdown-toggle').dropdown();
+    $('#users-list a').on('click', function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    });
+
+    // this is to clear query params after refresh
+    $(document).ready(function(){
+      var uri = window.location.toString();
+      if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+      }
+    });
       
   </script>
   <script>

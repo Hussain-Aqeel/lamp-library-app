@@ -1,4 +1,5 @@
 <?php session_start() ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,47 +15,47 @@
 </head>
 <body>
 
-<?php include('nav.php') ?>
-<?php if(isset($_SESSION['logged_in'])) { ?>
-<?php if ($_SESSION["role"] == 3) { ?>
-    <header id="showcase">
-      <div class="container">
-        <div class="showcase-container">
-          <div class="showcase-content">
-            <h2 class="mr-5">Welcome Again, <?php echo $_SESSION["fname"]?></h2>
-            <p>Enjoy our amazing collection of books!</p>
-            <a class="btn btn-outline-light rounded mt-4" href="browse-books.php">Browse books</a>
-          </div>
-        </div>
-      </div>
-    </header>
-<?php } else { ?>
-    <header id="showcase">
+    <?php include('nav.php') ?>
+    <?php if(isset($_SESSION['logged_in'])) { ?>
+    <?php if ($_SESSION["role"] == 3) { ?>
+        <header id="showcase">
         <div class="container">
             <div class="showcase-container">
             <div class="showcase-content">
                 <h2 class="mr-5">Welcome Again, <?php echo $_SESSION["fname"]?></h2>
-                <p>Go to your Dashboard to manage the platform..</p>
+                <p>Enjoy our amazing collection of books!</p>
+                <a class="btn btn-outline-light rounded mt-4" href="browse-books.php">Browse books</a>
             </div>
+            </div>
+        </div>
+        </header>
+    <?php } else { ?>
+        <header id="showcase">
+            <div class="container">
+                <div class="showcase-container">
+                <div class="showcase-content">
+                    <h2 class="mr-5">Welcome Again, <?php echo $_SESSION["fname"]?></h2>
+                    <p>Go to your Dashboard to manage the platform..</p>
+                </div>
+                </div>
+            </div>
+        </header>
+    <?php } } else { ?>
+    <header id="showcase">
+        <div class="container">
+            <div class="showcase-container">
+                <div class="showcase-content">
+                    <h1>Welcome</h1>
+                    <p class="hero-text">Login to your account to browse the library
+                        and borrow books.</p>
+                    <a class="btn btn-outline-light rounded mt-4" href="login.php">Start</a>
+                </div>
             </div>
         </div>
     </header>
-<?php } } else { ?>
-<header id="showcase">
-    <div class="container">
-        <div class="showcase-container">
-            <div class="showcase-content">
-                <h1>Welcome</h1>
-                <p class="hero-text">Login to your account to browse the library
-                    and borrow books.</p>
-                <a class="btn btn-outline-light rounded mt-4" href="login.php">Start</a>
-            </div>
-        </div>
-    </div>
-</header>
-<?php } ?>
+    <?php } ?>
 
-<?php include('footer.php') ?>
+    <?php include('footer.php') ?>
 
 <!-- bootstrap javascript files-->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

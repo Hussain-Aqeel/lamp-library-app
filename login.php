@@ -22,61 +22,68 @@ if (session_status() != PHP_SESSION_NONE) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  // /** @var mysqli $link */
-    /** @var mysqli $link */
-  $email = mysqli_real_escape_string($link, $_POST['email']);
-  $password = mysqli_real_escape_string($link, $_POST['password']);
+  // prepare a select statement
+  $sql = "SELECT * FROM user WHERE email=? AND password=? ;";
 
-  if ($email != "" && $password != "") {
+  if($stmt = mysqli_prepare($link, $sql)){
+    
+    // Bind variables to the prepared statement as parameters
+    mysqli_stmt_bind_param($stmt, "ss", $email, $password);
 
-      $sql_query = "SELECT * FROM user WHERE email='{$email}' AND password='{$password}'";
-      $result = mysqli_query($link, $sql_query);
-      $row = mysqli_fetch_array($result);
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-      $count = isset($row) ? count($row) : null;
+    if ($email != "" && $password != "") {
+      if(mysqli_stmt_execute($stmt)) {
 
-      if (isset($count) && $count > 0 ) {
+        $result = $stmt->get_result(); // get the mysqli result
 
-          $sql_query = "SELECT id FROM sessions ORDER BY id DESC limit 1";
-          $result = mysqli_query($link, $sql_query);
-          $row2 = mysqli_fetch_array($result);
+        $row = mysqli_fetch_array($result);
+        $count = isset($row) ? count($row) : null;
 
-          $sql_query = "INSERT INTO sessions VALUES ('')";
-          $result = mysqli_query($link, $sql_query);
+        if (isset($count) && $count > 0 ) {
 
-          $cookie_value = md5($row2['id']);
+            $sql_query = "SELECT id FROM sessions ORDER BY id DESC limit 1";
+            $result = mysqli_query($link, $sql_query);
+            $row2 = mysqli_fetch_array($result);
 
+            $sql_query = "INSERT INTO sessions VALUES ('')";
+            $result = mysqli_query($link, $sql_query);
 
+            $cookie_value = md5($row2['id']);
 
-          session_id($cookie_value);
-          session_start();
+            session_id($cookie_value);
+            session_start();
 
-          $_SESSION["logged_in"] = true;
-          $_SESSION["id"] = $row['id'];
-          $_SESSION["fname"] = $row['fname'];
-          $_SESSION["lname"] = $row['lname'];
-          $_SESSION["email"] = $row['email'];
-          $_SESSION["role"] = $row['role_id'];
-          $_SESSION["status"] = $row['status'];
+            $_SESSION["logged_in"] = true;
+            $_SESSION["id"] = $row['id'];
+            $_SESSION["fname"] = $row['fname'];
+            $_SESSION["lname"] = $row['lname'];
+            $_SESSION["email"] = $row['email'];
+            $_SESSION["role"] = $row['role_id'];
+            $_SESSION["status"] = $row['status'];
 
-          switch ($_SESSION["role"])
-          {
-              case 1:
-                  header('Location: admin-dashboard.php');
-                  break;
-              case 2:
-                  header('Location: librarian-dashboard.php');
-                  break;
-              case 3:
-                  header('Location: customer-dashboard.php');
-                  break;
-              default:
-                  header('Location: homepage.php');
-          }
-      } else {
-          $_SESSION['error_login'] = "Invalid username or password";
+            switch ($_SESSION["role"])
+            {
+                case 1:
+                    header('Location: admin-dashboard.php');
+                    break;
+                case 2:
+                    header('Location: librarian-dashboard.php');
+                    break;
+                case 3:
+                    header('Location: customer-dashboard.php');
+                    break;
+                default:
+                    header('Location: homepage.php');
+            }
+        } else {
+            $_SESSION['error_login'] = "Invalid username or password";
+        }
       }
+    }
   }
+
 }
 
 ?>
@@ -121,21 +128,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                   <label for="email">email</label>
                   <input
-                    id="email"
                     name="email"
                     type="email"
                     class="form-control"
                     placeholder="Enter Your email"
-                  />
+                    required>
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
                   <input
                     type="password"
-                    id="password"
                     name="password"
                     class="form-control"
-                  />
+                    required>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Login</button>
               </form>
@@ -150,14 +155,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <?php require_once('footer.php') ?>
 
   <!-- bootstrap javascript files-->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
-    <script>
-      setTimeout(function(){
-        document.getElementById('msg').style.display = 'none';
-        }, 8000);
-    </script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/9e12db6cc8.js" crossorigin="anonymous"></script>
+  <script>
+    // this is to clear query params after refresh
+    $(document).ready(function(){
+      var uri = window.location.toString();
+      if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+      }
+    });
+  </script>
+  <script>
+    setTimeout(function(){
+      document.getElementById('msg').style.display = 'none';
+      }, 8000);
+  </script>
 </body>
 </html>
