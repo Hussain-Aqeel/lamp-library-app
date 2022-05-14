@@ -5,7 +5,8 @@ session_start();
 // Include config file
 require_once "config.php";
 require_once "connection.php";
- 
+require_once "check_logged_in.php";
+
 // Define variables and initialize with empty values
 $firstName = $lastName = $email = $password = $password2 = "";
 $errors = array(); 
@@ -16,7 +17,7 @@ if (isset($_POST['reg_user'])) {
   // prepare a select statement
   $sql = "INSERT INTO user (role_id, status, email, password, fname, lname) 
   VALUES(3, 1, ? , ?, ?, ?)";
-
+    /** @var mysqli $link */
   if($stmt = mysqli_prepare($link, $sql)){
     
     // Bind variables to the prepared statement as parameters

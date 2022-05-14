@@ -1,31 +1,16 @@
 <?php
-
+session_start();
 include_once "connection.php";
 require_once "check_logged_in.php";
 
-if (session_status() != PHP_SESSION_NONE) {
-    switch ($_SESSION["role"])
-    {
-        case 1:
-            header('Location: admin-dashboard.php');
-            break;
-        case 2:
-            header('Location: librarian-dashboard.php');
-            break;
-        case 3:
-            header('Location: customer-dashboard.php');
-            break;
-        default:
-            header('Location: homepage.php');
-    }
-}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // prepare a select statement
   $sql = "SELECT * FROM user WHERE email=? AND password=? ;";
 
-  if($stmt = mysqli_prepare($link, $sql)){
+    /** @var mysqli $link */
+    if($stmt = mysqli_prepare($link, $sql)){
     
     // Bind variables to the prepared statement as parameters
     mysqli_stmt_bind_param($stmt, "ss", $email, $password);
@@ -43,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (isset($count) && $count > 0 ) {
 
+            // Vulnerable code
             $sql_query = "SELECT id FROM sessions ORDER BY id DESC limit 1";
             $result = mysqli_query($link, $sql_query);
             $row2 = mysqli_fetch_array($result);
@@ -51,6 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $result = mysqli_query($link, $sql_query);
 
             $cookie_value = md5($row2['id']);
+
+            // Countermeasure code
+            //$cookie_value = sha1(mt_rand() . time());
 
             session_id($cookie_value);
             session_start();

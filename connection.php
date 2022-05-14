@@ -11,5 +11,3 @@ $link = mysqli_connect($hostname, $username, $password, $database);
 if (!$link) {
     die("Failed to establish connection");
 }
-
-echo "Connection established successfully";
